@@ -1,0 +1,221 @@
+#!/bin/bash
+### SSH connection control box
+### Made by ralf.yang@gsshop.com, goody80762@gmail.com
+
+Docker_repo=[Docker repository IP]:[port]
+#Docker_repo=`cat /data/z/etc/init.d/docker | grep "^connection" | awk -F '=' '{print $2}'` | sed -e 's/"//g'
+Comm="sudo docker"
+Tmp_imgfile="/tmp/docker_imgtmp.txt"
+Tmp_psfile="/tmp/docker_pstmp.txt"
+Tmp_psAfile="/tmp/docker_psAtmp.txt"
+Tmp_tag="/tmp/docker_tag.txt"
+
+
+exit_abnormal() {
+stty echo 
+rm -f $Tmp_imgfile $Tmp_psfile $Tmp_psAfile $Tmp_tag
+exit 1
+}
+
+### Break sign catch for line break fix
+trap exit_abnormal SIGINT SIGTERM SIGKILL
+
+clear
+BAR="=========================================================================================================================================================" > $Tmp_imgfile
+echo $BAR  >> $Tmp_imgfile
+echo "   [:: Docker Images ::]"   >> $Tmp_imgfile
+echo $BAR  >> $Tmp_imgfile
+$Comm images | awk '{print NR-1,"|",$0}' >> $Tmp_imgfile
+
+echo ""  >> $Tmp_psAfile
+echo ""  > $Tmp_psAfile
+echo $BAR  >> $Tmp_psAfile
+echo "   [:: Active Processors ::]"  >> $Tmp_psAfile
+echo $BAR  >> $Tmp_psAfile
+$Comm ps |awk '{print NR-1,"|",$0}' >> $Tmp_psAfile
+
+echo ""  >> $Tmp_psfile
+echo ""  > $Tmp_psfile
+echo $BAR  >> $Tmp_psfile
+echo "   [:: All Processors ::]"  >> $Tmp_psfile
+echo $BAR  >> $Tmp_psfile
+$Comm ps -a |awk '{print NR-1,"|",$0}' >> $Tmp_psfile
+
+sed -i 's/^0 /  /g' $Tmp_imgfile
+sed -i 's/^0 /  /g' $Tmp_psAfile
+sed -i 's/^0 /  /g' $Tmp_psfile
+cat $Tmp_imgfile $Tmp_psAfile $Tmp_psfile
+
+#sh ./doc
+
+
+echo ""
+echo ""
+echo "======================================"
+echo " Please Insert a command as a list :)"
+echo "= Processor =========================="
+echo " Run the container ---------- [  run ]"
+echo " Start & Attach ------------- [  sa  ]"
+echo " Send command   ------------- [  com ]"
+echo " Remove PS ------------------ [  rm  ]"
+echo "= Image =============================="
+echo " Pull Image   --------------- [ pull ]"
+echo " Remove Image --------------- [  rmi ]"
+echo "= Commit & Push ======================"
+echo " Commit --------------------- [  ci  ]"
+echo " Tagging & Push ------------- [ push ]"
+echo "======================================"
+echo " Exit  	                     Ctrl+c"
+echo "======================================"
+
+read CommandX
+
+ImageNum=`tail -1 $Tmp_imgfile | awk '{print $1}'`
+PsNum=`tail -1 $Tmp_psfile | awk '{print $1}'`
+PsANum=`tail -1 $Tmp_psAfile | awk '{print $1}'`
+ImageIDArray=(`cat $Tmp_imgfile | awk '{print $5}' | tail -n +4`)
+ProcessorIDArray=(`cat $Tmp_psfile | awk '{print $3}' | tail -n +5`)
+ProcessorAIDArray=(`cat $Tmp_psAfile | awk '{print $3}' | tail -n +5`)
+
+
+run_container(){
+	$Comm run -ti --name $2 ${ImageIDArray[$1]} /bin/bash
+}
+
+
+sa_container(){
+	$Comm start $1
+	$Comm attach $1
+}
+
+
+comm_container(){
+	$Comm exec ${ProcessorAIDArray[$1]} $2
+	echo " - Please insert a any key if you have done - "
+	read
+}
+
+
+rm_container(){
+	$Comm rm ${ProcessorIDArray[$1]}
+}
+
+pull_image(){
+	$Comm pull $1
+}
+
+
+remove_image(){
+	$Comm rmi ${ImageIDArray[$1]}
+}
+
+ci_image(){
+	$Comm commit ${ProcessorAIDArray[$1]} $2
+	echo "$Comm commit ${ProcessorAIDArray[$1]} $2"
+}
+
+push_image(){
+ echo
+}
+
+
+        case "$CommandX" in
+        run)	
+		echo " == Please insert a image number [1 - $ImageNum ]"
+		read ImageNum
+		echo " == Please insert a new name for Run :"
+		read DockerName
+			if [[ $DockerName != "" ]];then
+		                run_container $ImageNum $DockerName
+			else
+				echo " == No Image ID == "
+			fi
+		;;
+	sa)
+		echo " == Please insert docker name for start :"
+		read St_docker
+			if [[ $St_docker != "" ]];then
+		                sa_container $St_docker
+			else
+				echo " == No Processor ID == "
+			fi
+		;;
+	com)
+		echo " == Please insert a Active Processor number [1 - $PsANum ]"
+		read ActiveProcessorNum
+		echo " == Please insert a command for send to container ?"
+		read CommandToContainer
+			if [[ $ActiveProcessorNum != "" ]];then
+		                comm_container $ActiveProcessorNum $CommandToContainer
+			else
+				echo " == No Processor No. == "
+			fi
+		;;
+	rm)
+		echo " == Please insert a Processor number for Remove [1 - $PsNum ]"
+		read ProcessorNum
+		echo " == Are you sure ? [y / n]"
+		read RmAnswer
+			if [[ $ProcessorNum != "" ]];then
+				if [[ $RmAnswer = "y" ]];then
+			                rm_container $ProcessorNum
+				fi
+			else
+				echo " == No Processor No. == "
+			fi
+		
+		;;
+	pull)
+		echo " == Please insert an image name for pulls:"
+		read ImagePullname
+			if [[ $ImagePullname != "" ]];then
+		                pull_image $ImagePullname 
+			else
+				echo " == No image name == "
+			fi
+
+		;;
+	rmi)
+		echo " == Please insert a number for remove the image [1 - $ImageNum] "
+		read RmImageNum
+		echo " == Are you sure ? [y / n]"
+		read RmIAnswer
+
+			if [[ $RmImageNum != "" ]];then
+				if [[ $RmIAnswer = "y" ]];then
+					remove_image $RmImageNum
+				fi
+			else
+				echo " == No image No. == "
+			fi
+
+		;;
+
+	ci)
+		echo " == Please insert a number of Active processor [1 - $PsANum] "
+		read CiNum
+		echo " == Please make sure the name for use:"
+		read CiAnswer
+			if [[ $CiNum != "" ]];then
+					ci_image $CiNum $CiAnswer
+			else
+				echo " == No image No. == "
+			fi
+		
+		;;
+	push)
+		$Comm images | fgrep -v "$Docker_repo" | awk '{print NR-1,$0}' | sed -e 's/^0/ /g' > $Tmp_tag
+		cat $Tmp_tag
+		TagNum=`cat $Tmp_tag | tail -1 | awk '{print $1}'`
+
+		echo " == Please choose a number for tag and push [1 - $TagNum] "
+		read TagPush
+			if [[ $TagPush != "" ]];then
+				 TagetPush=`grep "^$TagPush " $Tmp_tag | awk '{print $2":"$3}'`
+				$Comm tag $TagetPush $Docker_repo/$TagetPush
+				$Comm push $Docker_repo/$TagetPush
+			fi
+		;;
+	esac
+
+dcs
