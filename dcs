@@ -5,7 +5,9 @@
 
 Docker_repo=[Docker repository IP]:[port]
 #Docker_repo=`cat /data/z/etc/init.d/docker | grep "^connection" | awk -F '=' '{print $2}'` | sed -e 's/"//g'
-Comm="docker"
+Comm="sudo docker"
+Comm_withoutSudo="docker"
+
 Tmp_imgfile="/tmp/docker_imgtmp.txt"
 Tmp_psfile="/tmp/docker_pstmp.txt"
 Tmp_psAfile="/tmp/docker_psAtmp.txt"
@@ -21,13 +23,26 @@ exit 1
 ### Check if Boot2Docker has been run on the Macintosh
 check_docker_darwin() {
 
-	checkIfBoot2DockerInit=`$Comm ps > /dev/null 2>&1  ; echo $?`
+	### Try Docker ps without sudo -- 1st attempt
+	checkIfBoot2DockerInit=`$Comm_withoutSudo ps > /dev/null 2>&1  ; echo $?`
 
 	if [[ $checkIfBoot2DockerInit == "1" ]];then
-		echo "Please initialize Boot2Docker : (eg:- boot2docker up) "
-		echo "Exiting abnormaly !"
-		exit_abnormal
+
+		### If Failure, Try with Sudo version 
+		### Try Docker ps with sudo -- 1st attempt
+		echo "we need password to perform sudo... Kindly provide"
+		checkIfBoot2DockerInit=`$Comm ps > /dev/null 2>&1  ; echo $?`
+		if [[ $checkIfBoot2DockerInit == "1" ]];then
+			echo "Please initialize Boot2Docker : (eg:- boot2docker up) "
+			echo "Exiting abnormaly !"
+			exit_abnormal
+		fi
+	else 
+		echo "Will run the Docker commands without sudo"
+		Comm="docker"
 	fi
+
+	
 
 
 
