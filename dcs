@@ -114,10 +114,6 @@ ci_image(){
 	echo "$Comm commit ${ProcessorAIDArray[$1]} $2"
 }
 
-push_image(){
- echo
-}
-
 
         case "$CommandX" in
         run)	
