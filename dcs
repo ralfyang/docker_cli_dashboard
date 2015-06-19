@@ -1,5 +1,5 @@
 #!/bin/bash
-### SSH connection control box
+### docker container control box
 ### Made by ralf.yang@gsshop.com, goody80762@gmail.com
 
 
@@ -42,21 +42,13 @@ check_docker_darwin() {
 		Comm="docker"
 	fi
 
-	
-
-
-
 }
 
 ### Check machine type, if MacOS or Windows, it needs to have Boot2docker running :)
 checkMachineType=`uname -a | awk '{print $1}'`
-echo "Machine Type is : " $checkMachineType
 
 if [[ $checkMachineType == "Darwin" ]];then
-	echo " Macintosh detected "
 	check_docker_darwin                                
-else
- 	echo " Linux Machine detected "
 fi
 
 
