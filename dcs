@@ -3,9 +3,19 @@
 ### Made by ralf.yang@gsshop.com, goody80762@gmail.com
 
 
-Docker_repo=[Docker repository IP]:[port]
+## Please modify under variable for the private repository if you have.
+Docker_repo="[Docker repository IP]:[port]"
+
 #Docker_repo=`cat /data/z/etc/init.d/docker | grep "^connection" | awk -F '=' '{print $2}'` | sed -e 's/"//g'
-Comm="sudo docker"
+
+sudo_pkg_check=`rpm -qa  2> /dev/null |grep "^sudo"`
+	if [[ $sudo_pkg_check = "" ]]; then
+		Comm="docker"
+	else
+		Comm="sudo docker"
+	fi
+
+
 Comm_withoutSudo="docker"
 
 Tmp_imgfile="/tmp/docker_imgtmp.txt"
@@ -91,18 +101,18 @@ echo ""
 echo "======================================"
 echo " Please Insert a command as a list :)"
 echo "= Processor =========================="
-echo " Run the container ---------- [  run ]"
-echo " Start & Attach ------------- [  sa  ]"
-echo " Send command   ------------- [  com ]"
-echo " Remove PS ------------------ [  rm  ]"
+echo " Run the container ---------- [ run  ]"
+echo " Start & Attach ------------- [ sa   ]"
+echo " Send command   ------------- [ exec ]"
+echo " Remove PS ------------------ [ rm   ]"
 echo "= Image =============================="
 echo " Pull Image   --------------- [ pull ]"
-echo " Remove Image --------------- [  rmi ]"
+echo " Remove Image --------------- [ rmi  ]"
 echo "= Commit & Push ======================"
-echo " Commit --------------------- [  ci  ]"
+echo " Commit --------------------- [ ci   ]"
 echo " Tagging & Push ------------- [ push ]"
 echo "======================================"
-echo " Exit  	                     Ctrl+c"
+echo " Exit  	                     Ctrl+c "
 echo "======================================"
 
 read CommandX
@@ -173,7 +183,7 @@ ci_image(){
 				echo " == No Processor ID == "
 			fi
 		;;
-	com)
+	exec)
 		echo " == Please insert a Active Processor number [1 - $PsANum ]"
 		read ActiveProcessorNum
 		echo " == Please insert a command for send to container ?"
