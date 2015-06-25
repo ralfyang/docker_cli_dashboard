@@ -49,6 +49,7 @@ check_docker_darwin() {
 		fi
 	else 
 		echo "Will run the Docker commands without sudo"
+		osv="osx"
 		Comm="docker"
 	fi
 
@@ -88,9 +89,15 @@ echo "   [:: All Processors ::]"  >> $Tmp_psfile
 echo $BAR  >> $Tmp_psfile
 $Comm ps -a |awk '{print NR-1,"|",$0}' >> $Tmp_psfile
 
-sed -i 's/^0 /  /g' $Tmp_imgfile
-sed -i 's/^0 /  /g' $Tmp_psAfile
-sed -i 's/^0 /  /g' $Tmp_psfile
+	if [[ $osv = "osx" ]];then
+		sed -i "" 's/^0 /  /g' $Tmp_imgfile
+		sed -i "" 's/^0 /  /g' $Tmp_psAfile
+		sed -i "" 's/^0 /  /g' $Tmp_psfile
+	else
+		sed -i  's/^0 /  /g' $Tmp_imgfile
+		sed -i  's/^0 /  /g' $Tmp_psAfile
+		sed -i  's/^0 /  /g' $Tmp_psfile
+	fi
 cat $Tmp_imgfile $Tmp_psAfile $Tmp_psfile
 
 #sh ./doc
