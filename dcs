@@ -24,9 +24,11 @@ ChkOS=`cat /etc/*-release 2> /dev/null | head -1`
                                 Comm="sudo docker"
                         fi
                 fi
-	elif [[ $(uname) == Dawin ]];then
+	elif [[ $(uname) == Darwin ]];then
 		Comm="docker" 
+		osv="osx"
 	else
+echo "898989898988"
 		Comm="sudo docker" 
         fi
 
