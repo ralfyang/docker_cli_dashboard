@@ -5,17 +5,30 @@
 
 ## Please modify under variable for the private repository if you have.
 Docker_repo="[Docker repository IP]:[port]"
+#Docker_repo=`cat /data/z/etc/init.d/docker | grep "^connection" | awk -F '=' '{print $2}' | sed -e 's/"//g' `
 
-#Docker_repo=`cat /data/z/etc/init.d/docker | grep "^connection" | awk -F '=' '{print $2}'` | sed -e 's/"//g'
 
-sudo_pkg_check=`rpm -qa  2> /dev/null |grep "^sudo"`
-	if [[ $sudo_pkg_check = "" ]]; then
-		Comm="docker"
+ChkOS=`cat /etc/*-release 2> /dev/null | head -1`
+        if [[ $(uname) == Linux ]];then
+                if [[ $(cat /etc/*-release | head -1 |grep Ubuntu) != "" ]];then
+                        if [[ $(aptitude search '^sudo$') = "" ]];then
+                                Comm="docker"
+                        else
+                                Comm="sudo docker"
+                        fi
+                fi
+                if [[ $(cat /etc/*-release | head -1 |grep "CentOS" || "RHEL") != "" ]];then
+                        if [[ $(rpm -qa  2> /dev/null |grep "^sudo") = "" ]];then
+                                Comm="docker"
+                        else
+                                Comm="sudo docker"
+                        fi
+                fi
+	elif [[ $(uname) == Dawin ]];then
+		Comm="docker" 
 	else
-		Comm="sudo docker"
-	fi
-
-
+		Comm="sudo docker" 
+        fi
 Comm_withoutSudo="docker"
 
 Tmp_imgfile="/tmp/docker_imgtmp.txt"
