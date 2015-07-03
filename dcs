@@ -250,4 +250,8 @@ ci_image(){
 		;;
 	esac
 
-dcs
+        if [[  -f ./dcs ]];then
+                ./dcs
+        else
+                dcs
+        fi
