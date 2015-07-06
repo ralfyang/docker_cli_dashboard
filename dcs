@@ -17,7 +17,7 @@ ChkOS=`cat /etc/*-release 2> /dev/null | head -1`
                                 Comm="sudo docker"
                         fi
                 fi
-                if [[ $(cat /etc/*-release | head -1 |grep "CentOS" || "RHEL") != "" ]];then
+                if [[ $(cat /etc/*-release | head -1 |grep "CentOS") != "" ]] || [[ $(cat /etc/*-release | head -1 |grep "RHEL") != "" ]]  ;then
                         if [[ $(rpm -qa  2> /dev/null |grep "^sudo") = "" ]];then
                                 Comm="docker"
                         else
