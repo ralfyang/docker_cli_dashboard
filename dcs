@@ -28,7 +28,6 @@ ChkOS=`cat /etc/*-release 2> /dev/null | head -1`
 		Comm="docker" 
 		osv="osx"
 	else
-echo "898989898988"
 		Comm="sudo docker" 
         fi
 
