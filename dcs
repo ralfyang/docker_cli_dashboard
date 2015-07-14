@@ -92,6 +92,7 @@ echo "= Processor =========================="
 echo " Run the container ---------- [ run  ]"
 echo " Start & Attach ------------- [ sa   ]"
 echo " Send command   ------------- [ exec ]"
+echo " Stop ----------------------- [ stop ]"
 echo " Remove PS ------------------ [ rm   ]"
 echo "= Image =============================="
 echo " Pull Image   --------------- [ pull ]"
@@ -149,6 +150,10 @@ ci_image(){
 	echo "$Comm commit ${ProcessorAIDArray[$1]} $2"
 }
 
+Stop_container(){
+	$Comm stop ${ProcessorAIDArray[$1]}
+	echo "$Comm stop ${ProcessorAIDArray[$1]}"
+}
 
         case "$CommandX" in
         run)	
@@ -170,6 +175,16 @@ ci_image(){
 			else
 				echo " == No Processor ID == "
 			fi
+		;;
+	stop)
+		echo " == Please insert a number of Active processor [1 - $PsANum] "
+		read StopNum
+			if [[ $StopNum != "" ]];then
+					Stop_container $StopNum
+			else
+				echo " == No image No. == "
+			fi
+		
 		;;
 	exec)
 		echo " == Please insert a Active Processor number [1 - $PsANum ]"
