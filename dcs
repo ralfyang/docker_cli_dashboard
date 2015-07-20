@@ -149,6 +149,10 @@ ci_image(){
 	echo "$Comm commit ${ProcessorAIDArray[$1]} $2"
 }
 
+Stop_container(){
+	$Comm stop ${ProcessorAIDArray[$1]}
+	echo "$Comm stop ${ProcessorAIDArray[$1]}"
+}
 
 	## Case selection for instructions
         case "$CommandX" in
@@ -267,6 +271,18 @@ ci_image(){
 				fi
 			fi
 		;;
+
+	stop)
+		echo " == Please insert a number of Active processor [1 - $PsANum] "
+		read StopNum
+			if [[ $StopNum != "" ]];then
+					Stop_container $StopNum
+			else
+				echo " == No image No. == "
+			fi
+		
+		;;
+
 	esac
 	
 	## Find a command itself for task routine
