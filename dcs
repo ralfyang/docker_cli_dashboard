@@ -4,10 +4,11 @@
 
 
 ## Please modify under variable for the private repository if you have.
-Docker_repo="[Docker repository IP]:[port]"
 #Docker_repo=`cat /data/z/etc/init.d/docker | grep "^connection" | awk -F '=' '{print $2}' | sed -e 's/"//g' `
+#Docker_repo="[Docker repository IP]:[port]"
+Docker_repo=""
 
-
+## OS Check
 ChkOS=`cat /etc/*-release 2> /dev/null | head -1`
         if [[ $(uname) == Linux ]];then
                 if [[ $(cat /etc/*-release | head -1 |grep Ubuntu) != "" ]];then
@@ -31,11 +32,11 @@ ChkOS=`cat /etc/*-release 2> /dev/null | head -1`
 		Comm="sudo docker" 
         fi
 
+## Temporary file create for work memory
 Tmp_imgfile="/tmp/docker_imgtmp.txt"
 Tmp_psfile="/tmp/docker_pstmp.txt"
 Tmp_psAfile="/tmp/docker_psAtmp.txt"
 Tmp_tag="/tmp/docker_tag.txt"
-
 
 exit_abnormal() {
 stty echo 
@@ -44,11 +45,11 @@ exit 1
 }
 
 
-
-
 ### Break sign catch for line break fix
 trap exit_abnormal SIGINT SIGTERM SIGKILL
 
+
+## Print screen
 clear
 BAR="=========================================================================================================================================================" > $Tmp_imgfile
 echo $BAR  >> $Tmp_imgfile
@@ -81,9 +82,6 @@ $Comm ps -a |awk '{print NR-1,"|",$0}' >> $Tmp_psfile
 	fi
 cat $Tmp_imgfile $Tmp_psAfile $Tmp_psfile
 
-#sh ./doc
-
-
 echo ""
 echo ""
 echo "======================================"
@@ -92,7 +90,6 @@ echo "= Processor =========================="
 echo " Run the container ---------- [ run  ]"
 echo " Start & Attach ------------- [ sa   ]"
 echo " Send command   ------------- [ exec ]"
-echo " Stop ----------------------- [ stop ]"
 echo " Remove PS ------------------ [ rm   ]"
 echo "= Image =============================="
 echo " Pull Image   --------------- [ pull ]"
@@ -106,6 +103,7 @@ echo "======================================"
 
 read CommandX
 
+## Make a number & array
 ImageNum=`tail -1 $Tmp_imgfile | awk '{print $1}'`
 PsNum=`tail -1 $Tmp_psfile | awk '{print $1}'`
 PsANum=`tail -1 $Tmp_psAfile | awk '{print $1}'`
@@ -114,6 +112,7 @@ ProcessorIDArray=(`cat $Tmp_psfile | awk '{print $3}' | tail -n +5`)
 ProcessorAIDArray=(`cat $Tmp_psAfile | awk '{print $3}' | tail -n +5`)
 
 
+## Function for command as below
 run_container(){
 	$Comm run -ti --name $2 ${ImageIDArray[$1]} /bin/bash
 }
@@ -142,7 +141,7 @@ pull_image(){
 
 
 remove_image(){
-	$Comm rmi ${ImageIDArray[$1]}
+	$Comm rmi -f ${ImageIDArray[$1]}
 }
 
 ci_image(){
@@ -150,11 +149,8 @@ ci_image(){
 	echo "$Comm commit ${ProcessorAIDArray[$1]} $2"
 }
 
-Stop_container(){
-	$Comm stop ${ProcessorAIDArray[$1]}
-	echo "$Comm stop ${ProcessorAIDArray[$1]}"
-}
 
+	## Case selection for instructions
         case "$CommandX" in
         run)	
 		echo " == Please insert a image number [1 - $ImageNum ]"
@@ -176,16 +172,6 @@ Stop_container(){
 				echo " == No Processor ID == "
 			fi
 		;;
-	stop)
-		echo " == Please insert a number of Active processor [1 - $PsANum] "
-		read StopNum
-			if [[ $StopNum != "" ]];then
-					Stop_container $StopNum
-			else
-				echo " == No image No. == "
-			fi
-		
-		;;
 	exec)
 		echo " == Please insert a Active Processor number [1 - $PsANum ]"
 		read ActiveProcessorNum
@@ -200,7 +186,7 @@ Stop_container(){
 	rm)
 		echo " == Please insert a Processor number for Remove [1 - $PsNum ]"
 		read ProcessorNum
-		echo " == Are you sure ? [y / n]"
+		echo " == [ ${ProcessorIDArray[$ProcessorNum]} ]: Are you sure ? [y / n] "
 		read RmAnswer
 			if [[ $ProcessorNum != "" ]];then
 				if [[ $RmAnswer = "y" ]];then
@@ -224,7 +210,7 @@ Stop_container(){
 	rmi)
 		echo " == Please insert a number for remove the image [1 - $ImageNum] "
 		read RmImageNum
-		echo " == Are you sure ? [y / n]"
+		echo " == [ ${ImageIDArray[$RmImageNum]} ]: Are you sure ? [y / n]"
 		read RmIAnswer
 
 			if [[ $RmImageNum != "" ]];then
@@ -263,7 +249,8 @@ Stop_container(){
 			fi
 		;;
 	esac
-
+	
+	## Find a command itself for task routine
         if [[  -f ./dcs ]];then
                 ./dcs
         else
