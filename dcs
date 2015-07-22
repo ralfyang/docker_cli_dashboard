@@ -102,6 +102,7 @@ echo "======================================"
 echo " Exit  	                     Ctrl+c "
 echo "======================================"
 
+
 read CommandX
 
 ## Make a number & array
