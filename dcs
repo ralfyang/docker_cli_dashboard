@@ -2,7 +2,6 @@
 ### docker container control box
 ### Made by ralf.yang@gsshop.com, goody80762@gmail.com
 
-
 ## Please modify under variable for the private repository if you have.
 #Docker_repo=`cat /data/z/etc/init.d/docker | grep "^connection" | awk -F '=' '{print $2}' | sed -e 's/"//g' `
 #Docker_repo="[Docker repository IP]:[port]"
@@ -45,16 +44,6 @@ exit 1
 }
 
 
-<<<<<<< HEAD
-=======
-
-
-
-<<<<<<< HEAD
->>>>>>> gh-pages
-=======
-
->>>>>>> gh-pages
 ### Break sign catch for line break fix
 trap exit_abnormal SIGINT SIGTERM SIGKILL
 
