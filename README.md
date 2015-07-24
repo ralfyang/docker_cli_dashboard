@@ -8,3 +8,7 @@ CLi mode dashboard for Docker(in redhat, ubuntu, OSX)
 * It can be helps for type quickly :)
 * You just shuld send a command "dcs" for start,stop,remove, pull run...
 * That's all :)
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/goody80/docker_cli_dashboard/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
