@@ -45,12 +45,6 @@ exit 1
 }
 
 
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> gh-pages
 ### Break sign catch for line break fix
 trap exit_abnormal SIGINT SIGTERM SIGKILL
 
