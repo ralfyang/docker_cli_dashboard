@@ -2,7 +2,6 @@
 ### docker container control box
 ### Made by ralf.yang@gsshop.com, goody80762@gmail.com
 
-
 ## Please modify under variable for the private repository if you have.
 #Docker_repo=`cat /data/z/etc/init.d/docker | grep "^connection" | awk -F '=' '{print $2}' | sed -e 's/"//g' `
 #Docker_repo="[Docker repository IP]:[port]"
