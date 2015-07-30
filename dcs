@@ -258,7 +258,7 @@ Stop_container(){
 				 echo "TagetPush=`grep \"^$TagPush \" $Tmp_tag | awk '{print $2":"$3}'`"
 				 TagetPush=`grep "^$TagPush " $Tmp_tag | awk '{print $2":"$3}'`
 				if [[ $Docker_repo = "" ]];then
-					echo "== Do you need to make a tag ?"
+					echo "== Do you need to make a tag ? [y / n]"
 					read Tagcomm
 						if [[ $Tagcomm = "y" ]];then
 							echo "Please insert a tag name:"
