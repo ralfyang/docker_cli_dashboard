@@ -7,28 +7,30 @@
 #Docker_repo="[Docker repository IP]:[port]"
 Docker_repo=""
 
+## find a command
+Docker_comm=`which docker | head -1`
 ## OS Check
 ChkOS=`cat /etc/*-release 2> /dev/null | head -1`
         if [[ $(uname) == Linux ]];then
                 if [[ $(cat /etc/*-release | head -1 |grep Ubuntu) != "" ]];then
                         if [[ $(aptitude search '^sudo$') = "" ]];then
-                                Comm="docker"
+                                Comm="$Docker_comm"
                         else
-                                Comm="sudo docker"
+                                Comm="sudo $Docker_comm"
                         fi
                 fi
                 if [[ $(cat /etc/*-release | head -1 |grep "CentOS") != "" ]] || [[ $(cat /etc/*-release | head -1 |grep "RHEL") != "" ]]  ;then
                         if [[ $(rpm -qa  2> /dev/null |grep "^sudo") = "" ]];then
-                                Comm="docker"
+                                Comm="$Docker_comm"
                         else
-                                Comm="sudo docker"
+                                Comm="sudo $Docker_comm"
                         fi
                 fi
 	elif [[ $(uname) == Darwin ]];then
-		Comm="docker" 
+		Comm="$Docker_comm" 
 		osv="osx"
 	else
-		Comm="sudo docker" 
+		Comm="sudo $Docker_comm" 
         fi
 
 ## Temporary file create for work memory
