@@ -15,6 +15,9 @@ CLi mode dashboard for Docker(in redhat, ubuntu, OSX)
 1. "build" command 입력 시, Build에 사용 될 Dockerfile이 위치한 상위 디렉토리를 입력 받습니다.
 2. docker_build_auto.sh command를 해당 경로에 download 받고 해당 명령을 실행 합니다.
 3. 해당 경로에 속한 Dockerfile을 수정 후 build를 진행 합니다.
+4. 빌드가 완료 후 image에 설정한 부분들이 정상으로 적용되었는지 verification 처리 합니다.
+5. Verification 완료후 미리 지정한 tag(or user ID)가 할당되며, 지정된 registry로 해당 이미지의 upload를 진행합니다.
+6. Upload가 완료된 후 작업을 위해 사용된 temp 이미지 멫 log file을 clean-up 합니다
 
  * Image verification을 위한 명령어를 CheckCommand= 변수에 지정 해 주시면 이미지가 생성 된 후 확인을 진행 합니다.
 
