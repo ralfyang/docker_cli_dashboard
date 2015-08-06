@@ -2,6 +2,12 @@
 ### docker container control box
 ### Made by ralf.yang@gsshop.com, goody80762@gmail.com
 
+## Make sure build DIR
+BuildDir=""
+
+exefile=`which dcs |tail -1`
+
+
 ## Please modify under variable for the private repository if you have.
 #Docker_repo=`cat /data/z/etc/init.d/docker | grep "^connection" | awk -F '=' '{print $2}' | sed -e 's/"//g' `
 #Docker_repo="[Docker repository IP]:[port]"
@@ -32,6 +38,7 @@ ChkOS=`cat /etc/*-release 2> /dev/null | head -1`
 	else
 		Comm="sudo $Docker_comm" 
         fi
+
 
 ## Temporary file create for work memory
 Tmp_imgfile="/tmp/docker_imgtmp.txt"
@@ -96,6 +103,7 @@ echo " Remove PS      ------------- [ rm   ]"
 echo "= Image =============================="
 echo " Pull Image     ------------- [ pull ]"
 echo " Remove Image   ------------- [ rmi  ]"
+echo " Build Image    ------------- [ build]"
 echo "= Commit & Push ======================"
 echo " Commit --------------------- [ ci   ]"
 echo " Tagging & Push ------------- [ push ]"
@@ -133,6 +141,34 @@ comm_container(){
 	read
 }
 
+build_image(){
+
+	if [[ $BuildDir = "" ]];then
+		echo "$BAR"
+		echo " Please insert a Directory for image build under the Dockerfile [ex) /data/git/dockerfiles_dir]"
+		read ReadDir
+		sudo sed -i "s#^BuildDir=\"\"#BuildDir=\"$ReadDir\"#g" $exefile
+		cd $ReadDir
+	else 
+		cd $BuildDir
+	fi
+
+	if [[ ! -f ./docker_build_auto.sh ]];then
+		echo "$BAR"
+		echo "Do you need to install docker_build_auto.sh here ? [ y/n ]"
+		read Answ
+			if [[ $Answ = "y" ]] || [[ $Answ = "Y" ]];then
+				wget goody80.github.io/docker_build_auto/docker_build_auto.sh
+				sudo chmod 755 docker_build_auto.sh
+			else
+				echo "$BAR"
+				echo "You need to install the docker_build_auto.sh script for this work"
+				echo "$BAR"
+				exit 0
+			fi
+	fi
+	docker_build_auto.sh
+}
 
 rm_container(){
 	$Comm rm ${ProcessorIDArray[$1]}
@@ -159,6 +195,9 @@ Stop_container(){
 
 	## Case selection for instructions
         case "$CommandX" in
+	build)
+		build_image
+		;;
         run)	
 		echo " == Please insert a image number [1 - $ImageNum ]"
 		read ImageNum
@@ -287,10 +326,4 @@ Stop_container(){
 		;;
 
 	esac
-	
-	## Find a command itself for task routine
-        if [[  -f ./dcs ]];then
-                ./dcs
-        else
-                dcs
-        fi
+	$exefile
