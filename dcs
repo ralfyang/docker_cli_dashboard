@@ -167,7 +167,7 @@ build_image(){
 				exit 0
 			fi
 	fi
-	docker_build_auto.sh
+	./docker_build_auto.sh
 }
 
 rm_container(){
