@@ -1,5 +1,12 @@
 Here is an execution file	http://bit.do/dcs_
 
+* Download 및 설치
+```
+curl bit.do/dcs_ -o ./dcs
+sudo chmod 755 ./dcs
+sudo mv ./dcs /usr/bin/dcs
+```
+
 # docker_cli_dashboard
 CLi mode dashboard for Docker(in redhat, ubuntu, OSX)
 
