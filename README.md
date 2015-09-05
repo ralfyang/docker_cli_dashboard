@@ -2,7 +2,7 @@ Here is an execution file	http://bit.do/dcs_
 
 * Download 및 설치
 ```
-curl bit.do/dcs_ -o ./dcs
+curl -sL bit.do/dcs_ -o ./dcs
 sudo chmod 755 ./dcs
 sudo mv ./dcs /usr/bin/dcs
 ```
