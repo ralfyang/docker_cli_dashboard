@@ -3,8 +3,12 @@
 ### Made by ralf.yang@gsshop.com, goody80762@gmail.com
 
 ## Make sure build DIR
-BuildDir=""
+BUildDirConf="$HOME/build_dir.conf"
+	if [ ! -f $BUildDirConf ];then
+		touch  $BUildDirConf
+	fi
 
+BuildDir="cat $BUildDirConf"
 exefile=`which dcs |tail -1`
 
 
@@ -41,14 +45,14 @@ ChkOS=`cat /etc/*-release 2> /dev/null | head -1`
 
 
 ## Temporary file create for work memory
-Tmp_imgfile="/tmp/docker_imgtmp.txt"
-Tmp_psfile="/tmp/docker_pstmp.txt"
-Tmp_psAfile="/tmp/docker_psAtmp.txt"
-Tmp_tag="/tmp/docker_tag.txt"
+Tmp_imgfile="$HOME/docker_imgtmp.txt"
+Tmp_psfile="$HOME/docker_pstmp.txt"
+Tmp_psAfile="$HOME/docker_psAtmp.txt"
+Tmp_tag="$HOME/docker_tag.txt"
 
 exit_abnormal() {
 stty echo 
-rm -f $Tmp_imgfile $Tmp_psfile $Tmp_psAfile $Tmp_tag
+rm -f $Tmp_imgfile $Tmp_psfile $Tmp_psAfile $Tmp_tag 2> /dev/null
 exit 1
 }
 
@@ -143,11 +147,12 @@ comm_container(){
 
 build_image(){
 
-	if [[ $BuildDir = "" ]];then
+	if [[ ! -d $BuildDir ]];then
 		echo "$BAR"
 		echo " Please insert a Directory for image build under the Dockerfile [ex) /data/git/dockerfiles_dir]"
 		read ReadDir
-		sudo sed -i "s#^BuildDir=\"\"#BuildDir=\"$ReadDir\"#g" $exefile
+		#sudo sed -i "s#^BuildDir=\"\"#BuildDir=\"$ReadDir\"#g" $exefile
+		echo "$ReadDir" > $BUildDirConf
 		cd $ReadDir
 	else 
 		cd $BuildDir
