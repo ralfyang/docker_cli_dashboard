@@ -8,7 +8,7 @@ BUildDirConf="$HOME/build_dir.conf"
 		touch  $BUildDirConf
 	fi
 
-BuildDir="cat $BUildDirConf"
+BuildDir=`cat $BUildDirConf`
 exefile=`whereis dcs | awk '{print $2}'`
 
 
