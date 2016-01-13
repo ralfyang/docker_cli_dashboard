@@ -28,5 +28,12 @@ CLi mode dashboard for Docker(in redhat, ubuntu, OSX)
 
  * Image verification을 위한 명령어를 CheckCommand= 변수에 지정 해 주시면 이미지가 생성 된 후 확인을 진행 합니다.
 
+2016/01/13- update
+* 명령어 입력 부분에 command를 자유롭게 입력 할 수 있습니다.
+ * 복수개의 이미지를 삭제 하고자 할 경우 아래와 같이 입력 가능합니다.
+```
+rm 123124 0981723 09871023 0983
+```
+
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/goody80/docker_cli_dashboard/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
