@@ -10,7 +10,7 @@ sudo mv ./dcs /usr/bin/dcs
 # docker_cli_dashboard
 CLi mode dashboard for Docker(in redhat, ubuntu, OSX)
 
-![](https://trello-attachments.s3.amazonaws.com/55825a38d0e8e46411fb808c/1138x736/d5da1142d30aac9dba2ed4adc286297c/docker_cli_dashboard.png)
+![](https://trello-attachments.s3.amazonaws.com/5716e3ab82ba23b244631135/1231x796/731893555ffbc6c3c04b626f8a999dba/docker_cli.png)
 
 * It can be helps for type quickly :)
 * You just shuld send a command "dcs" for start,stop,remove, pull run...
@@ -31,6 +31,9 @@ CLi mode dashboard for Docker(in redhat, ubuntu, OSX)
 2016/01/13- update
 * 명령어 입력 부분에 command를 자유롭게 입력 할 수 있습니다.
  * 복수개의 이미지를 삭제 하고자 할 경우 아래와 같이 입력 가능합니다.
+  
+2016/04/20- update
+* OS별 Sudo 사용 유무에 따른 예외처리 적용하였습니다.
 ```
 rm 123124 0981723 09871023 0983
 ```
