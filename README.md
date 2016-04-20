@@ -1,8 +1,8 @@
-Here is an execution file	http://bit.do/dcs_
+Here is an execution file	http://bit.ly/ralf_dcs
 
 * Download 및 설치
 ```
-curl -sL bit.do/dcs_ -o ./dcs
+curl -sL bit.ly/ralf_dcs -o ./dcs
 sudo chmod 755 ./dcs
 sudo mv ./dcs /usr/bin/dcs
 ```
