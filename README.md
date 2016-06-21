@@ -38,5 +38,3 @@ CLi mode dashboard for Docker(in redhat, ubuntu, OSX)
 rm 123124 0981723 09871023 0983
 ```
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/goody80/docker_cli_dashboard/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
