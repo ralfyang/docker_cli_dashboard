@@ -10,7 +10,7 @@ sudo mv ./dcs /usr/bin/dcs
 # docker_cli_dashboard
 CLi mode dashboard for Docker(in redhat, ubuntu, OSX)
 
-![](https://trello-attachments.s3.amazonaws.com/5716e3ab82ba23b244631135/1231x796/731893555ffbc6c3c04b626f8a999dba/docker_cli.png)
+![](https://raw.githubusercontent.com/goody80/docker_cli_dashboard/master/sample01.png)
 
 * It can be helps for type quickly :)
 * You just shuld send a command "dcs" for start,stop,remove, pull run...
