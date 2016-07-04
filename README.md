@@ -39,7 +39,7 @@ rm 123124 0981723 09871023 0983
 ```
 
 2016/07/04- update
-* 사용하지 않는 Docker image의 정리 기능
+* 사용하지 않는 Docker Processors 정리 기능
 ```
 purge
 ```
