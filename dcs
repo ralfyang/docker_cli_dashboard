@@ -1,5 +1,5 @@
 #!/bin/bash
-### docker container control box
+### docker container control box  V. 1.4
 ### Made by ralf.yang@gsshop.com, goody80762@gmail.com
 
 ## Make sure build DIR
@@ -103,6 +103,7 @@ echo "= Image =============================="
 echo " Pull Image     ------------- [ pull ]"
 echo " Remove Image   ------------- [ rmi  ]"
 echo " Build Image    ------------- [ build]"
+echo " Purge Image    ------------- [ purge]"
 echo "= Commit & Push ======================"
 echo " Commit --------------------- [ ci   ]"
 echo " Tagging & Push ------------- [ push ]"
@@ -196,6 +197,10 @@ Stop_container(){
 	echo "$Comm stop ${ProcessorAIDArray[$1]}"
 }
 
+Purge_image(){
+	$Comm rm -v $(docker ps --filter status=exited -q 2>/dev/null) 2>/dev/null
+	$Comm rm -v $(docker ps --filter status=created -q 2>/dev/null) 2>/dev/null
+}
 	## Case selection for instructions
 	if [[ `(echo "$CommandX" | awk '{print $2}' )` = "" ]];then
 		case "$CommandX" in
@@ -245,7 +250,6 @@ Stop_container(){
 				else
 					echo " == No Processor No. == "
 				fi
-			
 			;;
 		pull)
 			echo " == Please insert an image name for pulls:"
@@ -255,7 +259,13 @@ Stop_container(){
 				else
 					echo " == No image name == "
 				fi
-    
+			;;
+		purge)
+			echo " == Not using image will be remove. Are sure that ? [ y/n ]:"
+			read ImagePurge
+				if [[ $ImagePurge = "y" ]];then
+			                Purge_image
+				fi
 			;;
 		rmi)
 			echo " == Please insert a number for remove the image [1 - $ImageNum] "
@@ -270,7 +280,6 @@ Stop_container(){
 				else
 					echo " == No image No. == "
 				fi
-    
 			;;
     
 		ci)
