@@ -43,3 +43,12 @@ rm 123124 0981723 09871023 0983
 ```
 purge
 ```
+
+2016/07/13- update
+1. 사용하지 않는 Volume 삭제기능 추가
+2. In-line command 입력방식 지원
+
+* dcs 내부에서 clean 또는, dcs clean 형태로 사용하지 않는 Volume 정리
+```
+clean
+```

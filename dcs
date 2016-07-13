@@ -7,7 +7,7 @@ BUildDirConf="$HOME/build_dir.conf"
 	if [ ! -f $BUildDirConf ];then
 		touch  $BUildDirConf
 	fi
-
+extra_input=$1
 BuildDir=`cat $BUildDirConf`
 exefile=`which dcs`
 
@@ -56,8 +56,8 @@ exit 1
 trap exit_abnormal SIGINT SIGTERM SIGKILL
 
 
-## Print screen
-clear
+
+
 BAR="=========================================================================================================================================================" > $Tmp_imgfile
 echo $BAR  >> $Tmp_imgfile
 echo "   [:: Docker Images ::]"   >> $Tmp_imgfile
@@ -87,6 +87,11 @@ $Comm ps -a |awk '{print NR-1,"|",$0}' >> $Tmp_psfile
 		sed -i  's/^0 /  /g' $Tmp_psAfile
 		sed -i  's/^0 /  /g' $Tmp_psfile
 	fi
+
+
+Print_screen(){
+## Print screen
+clear
 cat $Tmp_imgfile $Tmp_psAfile $Tmp_psfile
 
 echo ""
@@ -99,11 +104,12 @@ echo " Start & Attach ------------- [ sa   ]"
 echo " Stop           ------------- [ stop ]"
 echo " Send command   ------------- [ exec ]"
 echo " Remove PS      ------------- [ rm   ]"
+echo " Purge Processor ------------ [ purge]"
 echo "= Image =============================="
 echo " Pull Image     ------------- [ pull ]"
 echo " Remove Image   ------------- [ rmi  ]"
 echo " Build Image    ------------- [ build]"
-echo " Purge Image    ------------- [ purge]"
+echo " Purge volume   ------------- [ clean]"
 echo "= Commit & Push ======================"
 echo " Commit --------------------- [ ci   ]"
 echo " Tagging & Push ------------- [ push ]"
@@ -114,8 +120,16 @@ echo "======================================"
 echo " Exit  	                     Ctrl+c "
 echo "======================================"
 
+}
 
-read CommandX
+
+	if [[ $extra_input = "" ]];then
+		Print_screen
+		read CommandX
+	else
+		CommandX=$extra_input
+	fi
+
 
 ## Make a number & array
 ImageNum=`tail -1 $Tmp_imgfile | awk '{print $1}'`
@@ -201,145 +215,170 @@ Purge_image(){
 	$Comm rm -v $(docker ps --filter status=exited -q 2>/dev/null) 2>/dev/null
 	$Comm rm -v $(docker ps --filter status=created -q 2>/dev/null) 2>/dev/null
 }
+
+
+
+Clean_volume(){
+	$Comm volume ls -qf dangling=true | xargs docker volume rm
+}
+
 	## Case selection for instructions
 	if [[ `(echo "$CommandX" | awk '{print $2}' )` = "" ]];then
 		case "$CommandX" in
-		build)
-			build_image
-			;;
-            run)	
-			echo " == Please insert a image number [1 - $ImageNum ]"
-			read ImageNum
-			echo " == Please insert a new name for Run :"
-			read DockerName
-				if [[ $DockerName != "" ]];then
-			                run_container $ImageNum $DockerName
-				else
-					echo " == No Image ID == "
-				fi
-			;;
-		sa)
-			echo " == Please insert docker name for start :"
-			read St_docker
-				if [[ $St_docker != "" ]];then
-			                sa_container $St_docker
-				else
-					echo " == No Processor ID == "
-				fi
-			;;
-		exec)
-			echo " == Please insert a Active Processor number [1 - $PsANum ]"
-			read ActiveProcessorNum
-			echo " == Please insert a command for send to container ?"
-			read CommandToContainer
-				if [[ $ActiveProcessorNum != "" ]];then
-			                comm_container $ActiveProcessorNum $CommandToContainer
-				else
-					echo " == No Processor No. == "
-				fi
-			;;
-		rm)
-			echo " == Please insert a Processor number for Remove [1 - $PsNum ]"
-			read ProcessorNum
-			echo " == [ ${ProcessorIDArray[$ProcessorNum]} ]: Are you sure ? [y / n] "
-			read RmAnswer
-				if [[ $ProcessorNum != "" ]];then
-					if [[ $RmAnswer = "y" ]];then
-				                rm_container $ProcessorNum
-					fi
-				else
-					echo " == No Processor No. == "
-				fi
-			;;
-		pull)
-			echo " == Please insert an image name for pulls:"
-			read ImagePullname
-				if [[ $ImagePullname != "" ]];then
-			                pull_image $ImagePullname 
-				else
-					echo " == No image name == "
-				fi
-			;;
-		purge)
-			echo " == Not using image will be remove. Are sure that ? [ y/n ]:"
-			read ImagePurge
-				if [[ $ImagePurge = "y" ]];then
-			                Purge_image
-				fi
-			;;
-		rmi)
-			echo " == Please insert a number for remove the image [1 - $ImageNum] "
-			read RmImageNum
-			echo " == [ ${ImageIDArray[$RmImageNum]} ]: Are you sure ? [y / n]"
-			read RmIAnswer
-    
-				if [[ $RmImageNum != "" ]];then
-					if [[ $RmIAnswer = "y" ]];then
-						remove_image $RmImageNum
-					fi
-				else
-					echo " == No image No. == "
-				fi
-			;;
-    
-		ci)
-			echo " == Please insert a number of Active processor [1 - $PsANum] "
-			read CiNum
-			echo " == Please make sure the name for use:"
-			read CiAnswer
-				if [[ $CiNum != "" ]];then
-						ci_image $CiNum $CiAnswer
-				else
-					echo " == No image No. == "
-				fi
-			
-			;;
-		push)
-				if [[ $Docker_repo != "" ]];then
-					$Comm images | fgrep -v "$Docker_repo" | awk '{print NR-1,$0}' | sed -e 's/^0/ /g' > $Tmp_tag
-				else
-					$Comm images | awk '{print NR-1,$0}' | sed -e 's/^0/ /g' > $Tmp_tag
-				fi
-    
-			cat $Tmp_tag
-			TagNum=`cat $Tmp_tag | tail -1 | awk '{print $1}'`
-    
-			echo " == Please choose a number for tag and push [1 - $TagNum] "
-			read TagPush
-				if [[ $TagPush != "" ]];then
-					 echo "TagetPush=`grep \"^$TagPush \" $Tmp_tag | awk '{print $2":"$3}'`"
-					 TagetPush=`grep "^$TagPush " $Tmp_tag | awk '{print $2":"$3}'`
-					if [[ $Docker_repo = "" ]];then
-						echo "== Do you need to make a tag ? [y / n]"
-						read Tagcomm
-							if [[ $Tagcomm = "y" ]];then
-								echo "Please insert a tag name:"
-								read Tagname
-								$Comm tag $TagetPush $Tagname
-								$Comm push $Tagname
-							else
-								$Comm push $TagetPush
-							fi
+			build)
+				build_image
+				;;
+           		run)	
+				echo " == Please insert a image number [1 - $ImageNum ]"
+				read ImageNum
+				echo " == Please insert a new name for Run :"
+				read DockerName
+					if [[ $DockerName != "" ]];then
+				                run_container $ImageNum $DockerName
 					else
-						$Comm tag $TagetPush $Docker_repo/$TagetPush
-						$Comm push $Docker_repo/$TagetPush
+						echo " == No Image ID == "
 					fi
-				fi
-			;;
-    
-		stop)
-			echo " == Please insert a number of Active processor [1 - $PsANum] "
-			read StopNum
-				if [[ $StopNum != "" ]];then
-						Stop_container $StopNum
+				;;
+			sa)
+				echo " == Please insert docker name for start :"
+				read St_docker
+					if [[ $St_docker != "" ]];then
+				                sa_container $St_docker
+					else
+						echo " == No Processor ID == "
+					fi
+				;;
+			exec)
+				echo " == Please insert a Active Processor number [1 - $PsANum ]"
+				read ActiveProcessorNum
+				echo " == Please insert a command for send to container ?"
+				read CommandToContainer
+					if [[ $ActiveProcessorNum != "" ]];then
+				                comm_container $ActiveProcessorNum $CommandToContainer
+					else
+						echo " == No Processor No. == "
+					fi
+				;;
+			rm)
+				echo " == Please insert a Processor number for Remove [1 - $PsNum ]"
+				read ProcessorNum
+				echo " == [ ${ProcessorIDArray[$ProcessorNum]} ]: Are you sure ? [y / n] "
+				read RmAnswer
+					if [[ $ProcessorNum != "" ]];then
+						if [[ $RmAnswer = "y" ]];then
+					                rm_container $ProcessorNum
+						fi
+					else
+						echo " == No Processor No. == "
+					fi
+				;;
+			pull)
+				echo " == Please insert an image name for pulls:"
+				read ImagePullname
+					if [[ $ImagePullname != "" ]];then
+				                pull_image $ImagePullname 
+					else
+						echo " == No image name == "
+					fi
+				;;
+			purge)
+				if [[ $extra_input = "" ]];then
+					echo " == No use processor will be remove. Are sure that ? [ y/n ]:"
+					read ImagePurge
+						if [[ $ImagePurge = "y" ]];then
+					                Purge_image
+						fi
 				else
-					echo " == No image No. == "
+					Purge_image
 				fi
-			
-			;;
-    
+				;;
+			clean)
+				if [[ $extra_input = "" ]];then
+					echo " == No use volume will be remove. Are sure that ? [ y/n ]:"
+					read VolumeClean
+						if [[ $VolumeClean = "y" ]];then
+				        	        Clean_volume
+						fi
+				else
+						Clean_volume
+				fi
+				;;
+			rmi)
+				echo " == Please insert a number for remove the image [1 - $ImageNum] "
+				read RmImageNum
+				echo " == [ ${ImageIDArray[$RmImageNum]} ]: Are you sure ? [y / n]"
+				read RmIAnswer
+            
+					if [[ $RmImageNum != "" ]];then
+						if [[ $RmIAnswer = "y" ]];then
+							remove_image $RmImageNum
+						fi
+					else
+						echo " == No image No. == "
+					fi
+				;;
+            
+			ci)
+				echo " == Please insert a number of Active processor [1 - $PsANum] "
+				read CiNum
+				echo " == Please make sure the name for use:"
+				read CiAnswer
+					if [[ $CiNum != "" ]];then
+							ci_image $CiNum $CiAnswer
+					else
+						echo " == No image No. == "
+					fi
+				
+				;;
+			push)
+					if [[ $Docker_repo != "" ]];then
+						$Comm images | fgrep -v "$Docker_repo" | awk '{print NR-1,$0}' | sed -e 's/^0/ /g' > $Tmp_tag
+					else
+						$Comm images | awk '{print NR-1,$0}' | sed -e 's/^0/ /g' > $Tmp_tag
+					fi
+            
+				cat $Tmp_tag
+				TagNum=`cat $Tmp_tag | tail -1 | awk '{print $1}'`
+            
+				echo " == Please choose a number for tag and push [1 - $TagNum] "
+				read TagPush
+					if [[ $TagPush != "" ]];then
+						 echo "TagetPush=`grep \"^$TagPush \" $Tmp_tag | awk '{print $2":"$3}'`"
+						 TagetPush=`grep "^$TagPush " $Tmp_tag | awk '{print $2":"$3}'`
+						if [[ $Docker_repo = "" ]];then
+							echo "== Do you need to make a tag ? [y / n]"
+							read Tagcomm
+								if [[ $Tagcomm = "y" ]];then
+									echo "Please insert a tag name:"
+									read Tagname
+									$Comm tag $TagetPush $Tagname
+									$Comm push $Tagname
+								else
+									$Comm push $TagetPush
+								fi
+						else
+							$Comm tag $TagetPush $Docker_repo/$TagetPush
+							$Comm push $Docker_repo/$TagetPush
+						fi
+					fi
+				;;
+            
+			stop)
+				echo " == Please insert a number of Active processor [1 - $PsANum] "
+				read StopNum
+					if [[ $StopNum != "" ]];then
+							Stop_container $StopNum
+					else
+						echo " == No image No. == "
+					fi
+				
+				;;
+            
 		esac
 	else
 		$Comm $CommandX
 	fi
-	$exefile
+
+        if [[ $extra_input = "" ]];then
+		$exefile
+        fi
