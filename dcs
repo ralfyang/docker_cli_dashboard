@@ -1,5 +1,5 @@
 #!/bin/bash
-### docker container control box  V. 1.5
+### docker container control box  V. 1.7
 ### Made by ralf.yang@gsshop.com, goody80762@gmail.com
 
 ## Make sure build DIR
@@ -7,6 +7,7 @@ BUildDirConf="$HOME/build_dir.conf"
 	if [ ! -f $BUildDirConf ];then
 		touch  $BUildDirConf
 	fi
+	
 extra_input=$1
 BuildDir=`cat $BUildDirConf`
 exefile=`which dcs`
