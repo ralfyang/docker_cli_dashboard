@@ -53,3 +53,10 @@ purge
 ```
 clean
 ```
+
+2016/11/24- update
+
+1. "it" command 를 사용으로 running중인 docker 내부로 들어가기 지원
+```
+it
+```
