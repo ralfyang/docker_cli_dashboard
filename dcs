@@ -1,5 +1,5 @@
 #!/bin/bash
-### docker container control box  V. 1.7
+### docker container control box  V. 1.8
 ### Made by ralf.yang@gsshop.com, goody80762@gmail.com
 
 ## Make sure build DIR
@@ -97,7 +97,7 @@ cat $Tmp_imgfile $Tmp_psAfile $Tmp_psfile
 echo ""
 echo ""
 echo "======================================"
-echo " Please Insert a command as a list :)"
+echo " Please Insert a command as below  :) "
 echo "= Processor =========================="
 echo " Run the container ---------- [ run  ]"
 echo " Start & Attach ------------- [ sa   ]"
@@ -118,7 +118,8 @@ echo "======================================"
 echo " Cli ---------- [ Type free as below ]"
 echo " ex) stop 910930 19809 102039 09103"
 echo "======================================"
-echo " Exit  	                     Ctrl+c "
+echo " Exit  	                       Ctrl+c "
+echo " upgrade check & upgrade       upgrade"
 echo "======================================"
 
 }
@@ -395,6 +396,22 @@ Clean_volume(){
 						echo " == No image No. == "
 					fi
 				
+				;;
+            
+			upgrade)
+				Current_ver=`cat $exefile  |grep 'V. [0-9].[0-9]' | sed -e 's/^### [[:alnum:]* ]* V. //g'`
+				Latest_ver=`curl -sL http://bit.ly/dcs_ |grep 'V. [0-9].[0-9]' | sed -e 's/^### [[:alnum:]* ]* V. //g'`
+				if [[ $Current_ver < $Latest_ver ]];then
+					curl -sL http://bit.ly/dcs_ -o /tmp/curl
+					sudo cp  /tmp/curl $exefile
+					chmod 755 $exefile
+					echo " === dcs has been updated!! ==="
+					sleep 3
+				else
+					echo " === Now you have latest version of dcs ==="
+					sleep 3
+				fi
+
 				;;
             
 		esac

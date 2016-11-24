@@ -83,3 +83,7 @@ test_dcss
 ``` 
 1. "it" command 를 사용시 활성화된 Processor로 들어가기로 수정(기존에는 비활성화된 Processor를 찾는 문제 있었음)
 =======
+
+2016/11/24_02- update
+1. "upgrade" command를 사용하여 Docker Cli-dashboard를 자동 update 할 수 있습니다!
+
