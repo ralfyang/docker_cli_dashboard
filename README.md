@@ -54,9 +54,31 @@ purge
 clean
 ```
 
-2016/11/24- update
+2016/10/24- update
 
 1. "it" command 를 사용으로 running중인 docker 내부로 들어가기 지원
 ```
 it
 ```
+
+2016/11/24- update
+
+1. "run" command 사용시 Port-expose를 추가 할 수 있는 step을 추가
+```
+======================================
+run
+ == Please insert a image number [1 - 23 ]
+1
+ == Please insert a new name for Run :
+test_dcss
+ == Do you need to make port forwarding ? [host-port:container-port or null]
+8080:80 8081:81
+
+
+=========================================================================================================================================================
+   [:: Active Processors ::]
+=========================================================================================================================================================
+  | CONTAINER ID        IMAGE                  COMMAND                  CREATED             STATUS              PORTS                                                  NAMES
+1 | b2d5490a70af        ab7284315dff           "docker-entrypoint.sh"   7 seconds ago       Up 7 seconds        8983/tcp, 0.0.0.0:8080->80/tcp, 0.0.0.0:8081->81/tcp   test_dcs
+``` 
+1. "it" command 를 사용시 활성화된 Processor로 들어가기로 수정(기존에는 비활성화된 Processor를 찾는 문제 있었음)

@@ -1,5 +1,5 @@
 #!/bin/bash
-### docker container control box  V. 1.6
+### docker container control box  V. 1.7
 ### Made by ralf.yang@gsshop.com, goody80762@gmail.com
 
 ## Make sure build DIR
@@ -143,7 +143,15 @@ ProcessorAIDArray=(`cat $Tmp_psAfile | awk '{print $3}' | tail -n +5`)
 
 ## Function for command as below
 run_container(){
-	$Comm run -ti --name $2 ${ImageIDArray[$1]} /bin/bash
+	echo " == Do you need to make port forwarding ? [host-port:container-port or null] "
+	read portcheck
+		if [[ $portcheck = "" ]];then
+			port_expose=""
+		else
+			port_parser=`echo "$portcheck"  | sed -e 's/ [0-9]*:[0-9]/ -p&/g'`
+			port_expose="-p $port_parser"
+		fi
+	$Comm run $port_expose -it --name $2 ${ImageIDArray[$1]}  /bin/bash
 }
 
 
@@ -194,7 +202,7 @@ rm_container(){
 }
 
 it_container(){
-	$Comm exec -it ${ProcessorIDArray[$1]} /bin/bash
+        $Comm exec -it ${ProcessorAIDArray[$1]} /bin/bash
 }
 
 pull_image(){
@@ -239,10 +247,11 @@ Clean_volume(){
 				echo " == Please insert a new name for Run :"
 				read DockerName
 					if [[ $DockerName != "" ]];then
-				                run_container $ImageNum $DockerName
+				                run_container  $ImageNum $DockerName
 					else
 						echo " == No Image ID == "
 					fi
+				
 				;;
 			sa)
 				echo " == Please insert docker name for start :"
@@ -265,7 +274,7 @@ Clean_volume(){
 					fi
 				;;
 			it)
-				echo " == Please insert a Processor number for Remove [1 - $PsNum ]"
+				echo " == Please insert a Processor number for Remove [1 - $PsANum ]"
 				read ProcessorNum
 					if [[ $ProcessorNum != "" ]];then
 						it_container $ProcessorNum
