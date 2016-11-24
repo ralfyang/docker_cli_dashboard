@@ -405,10 +405,10 @@ Clean_volume(){
 					curl -sL http://bit.ly/dcs_ -o /tmp/curl
 					sudo cp  /tmp/curl $exefile
 					chmod 755 $exefile
-					echo " === dcs has been updated!! ==="
+					echo " === dcs has been updated!! - Version $Current_ver -> $Latest_ver ==="
 					sleep 3
 				else
-					echo " === Now you have latest version of dcs ==="
+					echo " === Now you have latest version of dcs - Version $Current_ver ==="
 					sleep 3
 				fi
 
