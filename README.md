@@ -81,6 +81,7 @@ test_dcss
   | CONTAINER ID        IMAGE                  COMMAND                  CREATED             STATUS              PORTS                                                  NAMES
 1 | b2d5490a70af        ab7284315dff           "docker-entrypoint.sh"   7 seconds ago       Up 7 seconds        8983/tcp, 0.0.0.0:8080->80/tcp, 0.0.0.0:8081->81/tcp   test_dcs
 ``` 
+
 1. "it" command 를 사용시 활성화된 Processor로 들어가기로 수정(기존에는 비활성화된 Processor를 찾는 문제 있었음)
 =======
 
