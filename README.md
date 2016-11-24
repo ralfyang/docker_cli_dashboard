@@ -63,6 +63,7 @@ it
 
 2016/11/24- update
 
+1. "it" command 를 사용시 활성화된 Processor로 들어가기로 수정(기존에는 비활성화된 Processor를 찾는 문제 있었음)
 1. "run" command 사용시 Port-expose를 추가 할 수 있는 step을 추가
 ```
 ======================================
@@ -82,9 +83,8 @@ test_dcss
 1 | b2d5490a70af        ab7284315dff           "docker-entrypoint.sh"   7 seconds ago       Up 7 seconds        8983/tcp, 0.0.0.0:8080->80/tcp, 0.0.0.0:8081->81/tcp   test_dcs
 ``` 
 
-1. "it" command 를 사용시 활성화된 Processor로 들어가기로 수정(기존에는 비활성화된 Processor를 찾는 문제 있었음)
-=======
 
 2016/11/24_02- update
+
 1. "upgrade" command를 사용하여 Docker Cli-dashboard를 자동 update 할 수 있습니다!
 
