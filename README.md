@@ -1,6 +1,6 @@
-Here is an execution file	http://bit.ly/ralf_dcs
+## Here is an execution file	http://bit.ly/ralf_dcs
 
-* Download & Install
+## Download & Install
 ```
 curl -sL bit.ly/ralf_dcs -o ./dcs
 sudo chmod 755 ./dcs
@@ -16,7 +16,7 @@ CLi mode dashboard for Docker(in redhat, ubuntu, OSX)
 * You just shuld send a command "dcs" for start,stop,remove, pull run...
 * That's all :)
 
-2015/08/06 - update
+#### 2015/08/06 - update
 * You can build & verify the docker image now via dcs command !
 
 1. If you type "build" in dcs, you should input the parents directory name of dockerfile existing directory
@@ -27,7 +27,7 @@ CLi mode dashboard for Docker(in redhat, ubuntu, OSX)
 6. After the upload to registry, you can clean the temporary image and log file
   
 
-2016/01/13- update
+#### 2016/01/13- update
 * You can feel free type the command as you want
   * For example, if you need to remove several images, you can type as below
 ```
@@ -35,13 +35,13 @@ rm 123124 0981723 09871023 0983
 ```
 * New function has been applied for exception process of sudo command use or not
 
-2016/07/04- update
+#### 2016/07/04- update
 * Purge function has been applied for no use image
 ```
 purge
 ```
 
-2016/07/13- update
+#### 2016/07/13- update
 
 1. Clean function has been applied for no use Volumes
 ```
@@ -54,7 +54,7 @@ $ dcs clean
 ```
   
   
-2016/10/24- update
+#### 2016/10/24- update
 
 1. Supports entering the running docker using the `it` command
 ```
@@ -65,7 +65,7 @@ or
 it [image id]
 ```
 
-2016/11/24- update
+#### 2016/11/24- update
 
 1. Bug Patch for `it` command of "Active process"(bug was `it` command found a in-active process)
 2. "run" command 사용시 Port-expose를 추가 할 수 있는 step을 추가
@@ -89,5 +89,5 @@ test_dcss
 ``` 
 
 
-2016/11/24_02- update
+#### 2016/11/24_02- update
 1. Use the "upgrade" command to automatically update the Docker Cli-dashboard!
