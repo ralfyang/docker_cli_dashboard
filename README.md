@@ -1,6 +1,6 @@
 Here is an execution file	http://bit.ly/ralf_dcs
 
-* Download 및 설치
+* Download & Install
 ```
 curl -sL bit.ly/ralf_dcs -o ./dcs
 sudo chmod 755 ./dcs
@@ -17,6 +17,7 @@ CLi mode dashboard for Docker(in redhat, ubuntu, OSX)
 * That's all :)
 
 2015/08/06 - update
+* You can build & verify the docker image now via dcs command !
 * Docker Cli Dashboard를 통해서 자동으로 이미지 build 및 Verification 할 수 있는 command를 추가 하였습니다. :) 
 
 1. "build" command 입력 시, Build에 사용 될 Dockerfile이 위치한 상위 디렉토리를 입력 받습니다.
