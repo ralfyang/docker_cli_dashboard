@@ -91,3 +91,8 @@ test_dcss
 
 #### 2016/11/24_02- update
 1. Use the "upgrade" command to automatically update the Docker Cli-dashboard!
+
+#### 2017/06/28- update
+1. update for numbering for align: 1, 2, 3 -> 01, 02, 03
+
+
