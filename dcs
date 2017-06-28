@@ -1,5 +1,5 @@
 #!/bin/bash
-### docker container control box  V. 1.8
+### docker container control box  V. 1.9
 ### Made by ralf goody80762@gmail.com
 
 ## Make sure build DIR
@@ -62,22 +62,22 @@ BAR="===========================================================================
 echo $BAR  >> $Tmp_imgfile
 echo "   [:: Docker Images ::]"   >> $Tmp_imgfile
 echo $BAR  >> $Tmp_imgfile
-$Comm images | awk '{print NR-1,"|",$0}' >> $Tmp_imgfile
+$Comm images |awk '{printf "%.2d | "$0"\n",NR-1}' | sed -e 's/00/  /g' >> $Tmp_imgfile
+
 
 echo ""  >> $Tmp_psAfile
 echo ""  > $Tmp_psAfile
 echo $BAR  >> $Tmp_psAfile
 echo "   [:: Active Processors ::]"  >> $Tmp_psAfile
 echo $BAR  >> $Tmp_psAfile
-$Comm ps |awk '{print NR-1,"|",$0}' >> $Tmp_psAfile
+$Comm ps |awk '{printf "%.2d |"$0"\n",NR-1}' |sed -e 's/00/  /g' >> $Tmp_psAfile
 
 echo ""  >> $Tmp_psfile
 echo ""  > $Tmp_psfile
 echo $BAR  >> $Tmp_psfile
 echo "   [:: All Processors ::]"  >> $Tmp_psfile
 echo $BAR  >> $Tmp_psfile
-$Comm ps -a |awk '{print NR-1,"|",$0}' >> $Tmp_psfile
-
+$Comm ps -a |awk '{printf "%.2d |"$0"\n",NR-1}' |sed -e 's/00/  /g' >> $Tmp_psfile
 	if [[ $osv = "osx" ]];then
 		sed -i "" 's/^0 /  /g' $Tmp_imgfile
 		sed -i "" 's/^0 /  /g' $Tmp_psAfile
