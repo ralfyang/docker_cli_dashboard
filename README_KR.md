@@ -84,8 +84,10 @@ test_dcss
 ``` 
 
 
-2016/11/24_02- update
+#### 2016/11/24_02- update
 
 1. "upgrade" command를 사용하여 Docker Cli-dashboard를 자동 update 할 수 있습니다!
 
-++
+
+#### 2017/07/6- update
+1. 사용하지 않는 이미지 정리 - reduce 옵션 추가

@@ -96,7 +96,7 @@ test_dcss
 1. update for numbering for align: 1, 2, 3 -> 01, 02, 03
 
 #### 2017/07/6- update
-1. update for no-use image clean
+1. update for no-use image clean via `reduce` option
 
 
 
