@@ -1,5 +1,5 @@
 #!/bin/bash
-### docker container control box  V. 1.92
+### docker container control box  V. 1.93
 ### Made by ralf goody80762@gmail.com
 #
 
@@ -110,12 +110,12 @@ echo " Purge Processor ------------ [ purge]"
 echo "= Image =============================="
 echo " Pull Image     ------------- [ pull ]"
 echo " Remove Image   ------------- [ rmi  ]"
-echo " Remove not use Image  ------ [reduce]"
 echo " Build Image    ------------- [ build]"
 echo " Purge volume   ------------- [ clean]"
 echo "= Commit & Push ======================"
 echo " Commit --------------------- [ ci   ]"
 echo " Tagging & Push ------------- [ push ]"
+echo " Prune image/volume/network - [ prune]"
 echo "======================================"
 echo " Cli ---------- [ Type free as below ]"
 echo " ex) stop 910930 19809 102039 09103"
@@ -234,7 +234,11 @@ Purge_image(){
 
 
 Purge_Old_image(){
-	$Comm  rmi $(docker images --filter "dangling=true" -q --no-trunc) 2> /dev/null
+	#$Comm  rmi $(docker images --filter "dangling=true" -q --no-trunc) 2> /dev/null
+	$Comm container prune --force 2>/dev/null
+	$Comm image prune --force 2>/dev/null
+	$Comm network prune --force 2>/dev/null
+	$Comm volume prune --force 2>/dev/null
 }
 
 Clean_volume(){
@@ -329,7 +333,7 @@ Clean_volume(){
 					Purge_image
 				fi
 				;;
-			reduce)
+			prune)
 				if [[ $answ != "y" ]];then
 					echo " == No use image will be remove. Are sure that ? [ y/n ]:"
 					read ImageOldPurge

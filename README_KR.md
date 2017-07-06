@@ -91,3 +91,9 @@ test_dcss
 
 #### 2017/07/6- update
 1. 사용하지 않는 이미지 정리 - reduce 옵션 추가
+
+
+#### 2017/07/6- update
+1. `prune` 옵션을 사용한 docker 정리하기 기능 추가(volume/network/process/image)
+
+

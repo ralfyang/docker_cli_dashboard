@@ -99,6 +99,8 @@ test_dcss
 1. update for no-use image clean via `reduce` option
 
 
+#### 2017/07/6- update
+1. update for `prune` command all clean(volume/network/process/image)
 
 
 _
