@@ -236,9 +236,17 @@ Purge_image(){
 Purge_Old_image(){
 	#$Comm  rmi $(docker images --filter "dangling=true" -q --no-trunc) 2> /dev/null
 	$Comm container prune --force 2>/dev/null
+	echo " --- container clean: Done ---"
+	echo ""
 	$Comm image prune --force 2>/dev/null
+	echo " --- Image clean: Done ---"
+	echo ""
 	$Comm network prune --force 2>/dev/null
+	echo " --- Network clean: Done ---"
+	echo ""
 	$Comm volume prune --force 2>/dev/null
+	echo " --- Volume clean: Done ---"
+	sleep 3
 }
 
 Clean_volume(){
