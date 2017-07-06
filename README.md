@@ -95,6 +95,10 @@ test_dcss
 #### 2017/06/28- update
 1. update for numbering for align: 1, 2, 3 -> 01, 02, 03
 
+#### 2017/07/6- update
+1. update for no-use image clean
+
+
 
 
 _
