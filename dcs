@@ -103,14 +103,12 @@ echo "= Processor ==========================  = Image ==========================
 echo " Run the container ---------- [ run  ]| Pull Image     ------------- [ pull ] | Commit --------------------- [ ci   ]"
 echo " Start & Attach ------------- [ sa   ]| Remove Image   ------------- [ rmi  ] | Tagging & Push ------------- [ push ]"
 echo " Stop           ------------- [ stop ]| Build Image    ------------- [ build] | Prune image/volume/network - [ prune]"
-echo " Send command   ------------- [ exec ]| Purge volume   ------------- [ clean] | ====================================="
-echo " Into the running docker ---- [ it   ]| ====================================="
+echo " Send command   ------------- [ exec ]| Purge volume   ------------- [ clean] | "
+echo " Into the running docker ---- [ it   ]| ===================================== | ====================================="
 echo " Remove PS      ------------- [ rm   ]|"
-echo " Purge Processor ------------ [ purge]|"
-echo "======================================| ===================================== "
-echo " Cli ---------- [ Type free as below ]| Exit                           Ctrl+c"
-echo " ex) stop 910930 19809 102039 09103   | upgrade check & upgrade       upgrade"
-echo "======================================| ===================================== "
+echo " Purge Processor ------------ [ purge]| Cli ---------- [ Type free as below ] | Exit                           Ctrl+c"
+echo " All Processor stop!! ------- [ halt ]| ex) stop 910930 19809 102039 09103    | upgrade check & upgrade       upgrade"
+echo "======================================| ===================================== | ====================================="
 
 }
 
