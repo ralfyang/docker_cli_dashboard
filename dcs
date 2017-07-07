@@ -92,7 +92,7 @@ $Comm ps -a |awk '{printf "%.2d | "$0"\n",NR-1}' |sed -e 's/00/  /g' >> $Tmp_psf
 
 Print_screen(){
 ## Print screen
-#clear
+clear
 cat $Tmp_imgfile $Tmp_psAfile $Tmp_psfile
 
 echo ""
