@@ -1,5 +1,5 @@
 #!/bin/bash
-### docker container control box  V. 1.94
+### docker container control box  V. 1.95
 ### Made by ralf goody80762@gmail.com
 #
 
@@ -232,6 +232,10 @@ Purge_image(){
 	$Comm rm -v $(docker ps --filter status=created -q 2>/dev/null) 2>/dev/null
 }
 
+All_stop_process(){
+	$Comm ps  |awk '{print $1}' | egrep -v 'CONTAINER' | xargs  docker stop
+	echo "---------------------  $Comm docker ps  |awk '{print $1}' | egrep -v 'CONTAINER' | xargs  docker stop----------------------"
+}
 
 Purge_Old_image(){
 	#$Comm  rmi $(docker images --filter "dangling=true" -q --no-trunc) 2> /dev/null
@@ -329,6 +333,17 @@ Clean_volume(){
 					else
 						echo " == No image name == "
 					fi
+				;;
+			halt)
+				if [[ $answ != "y" ]];then
+					echo " == All active processor will be stop. Are sure that ? [ y/n ]:"
+					read AllprocessQ
+						if [[ $AllprocessQ = "y" ]];then
+					                All_stop_process
+						fi
+				else
+					All_stop_process
+				fi
 				;;
 			purge)
 				if [[ $answ != "y" ]];then
