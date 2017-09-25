@@ -436,10 +436,11 @@ Clean_volume(){
 
 			upgrade)
 				Current_ver=`cat $exefile  |grep 'V. [0-9].[0-9]' | sed -e 's/^### [[:alnum:]* ]* V. //g'`
-				Latest_ver=`curl -sL http://bit.ly/dcs_ |grep 'V. [0-9].[0-9]' | sed -e 's/^### [[:alnum:]* ]* V. //g'`
+				Latest_ver=`curl -sLH "Cache-Control: no-cache" bit.ly/dcs_ |grep 'V. [0-9].[0-9]' | sed -e 's/^### [[:alnum:]* ]* V. //g'`
 				if [[ $Current_ver < $Latest_ver ]];then
-					curl -sL http://bit.ly/dcs_ -o /tmp/curl
+					curl -sLH "Cache-Control: no-cache" bit.ly/dcs_ -o /tmp/curl
 					sudo cp  /tmp/curl $exefile
+					sudo rm -f /tmp/curl
 					chmod 755 $exefile
 					echo " === dcs has been updated!! - Version $Current_ver -> $Latest_ver ==="
 					sleep 3
