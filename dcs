@@ -140,7 +140,7 @@ run_container(){
 			port_parser=`echo "$portcheck"  | sed -e 's/ [0-9]*:[0-9]/ -p&/g'`
 			port_expose="-p $port_parser"
 		fi
-	$Comm run $port_expose -it --name $2 ${ImageIDArray[$1]}  /bin/bash
+	$Comm run $port_expose -it --name $2 ${ImageIDArray[$1]}  /bin/sh
 }
 
 
@@ -191,7 +191,7 @@ rm_container(){
 }
 
 it_container(){
-        $Comm exec -it ${ProcessorAIDArray[$1]} /bin/bash
+        $Comm exec -it ${ProcessorAIDArray[$1]} /bin/sh
 }
 
 pull_image(){
