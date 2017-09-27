@@ -1,5 +1,5 @@
 #!/bin/bash
-### docker container control box  V. 1.97
+### docker container control box  V. 1.98
 ### Made by ralf goody80762@gmail.com
 #
 
@@ -290,7 +290,7 @@ Clean_volume(){
 					fi
 				;;
 			it)
-				echo " == Please insert a Processor number for Remove [01 - $PsANum ]"
+				echo " == Please insert a Processor number for into that [01 - $PsANum ]"
 				read ProcessorNum
 					if [[ $ProcessorNum != "" ]];then
 						it_container $ProcessorNum
