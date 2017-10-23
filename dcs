@@ -210,8 +210,8 @@ ci_image(){
 
 
 save_all_images(){
-	docker_images=$(docker images | egrep -v "^REPOSITORY" | awk '{print $1":"$2}')
-	docker_image_count=$(docker images | egrep -v "^REPOSITORY" | wc -l)
+	docker_images=$($Comm images | egrep -v "^REPOSITORY" | awk '{print $1":"$2}')
+	docker_image_count=$($Comm images | egrep -v "^REPOSITORY" | wc -l)
 	mkdir -p ~/tmp`date +%Y%m%d`/
 
 		echo " === Exporting the image to files === "
@@ -220,7 +220,7 @@ save_all_images(){
 		do
 			echo "[ $count / $docker_image_count ] - $i"
 			tar_name=$(echo "$i" |sed -e 's/:/_/g' -e 's#/#_#g' )
-			docker save $i > ~/tmp`date +%Y%m%d`/$tar_name.tgz
+			$Comm save $i > ~/tmp`date +%Y%m%d`/$tar_name.tgz
 			let count=$count+1
 		done
 	echo " === Compressing image files to Tarball file  (in ~/docker_images_output.tgz) === "
@@ -249,7 +249,7 @@ load_all_images(){
 		for i in $docker_images_tgz
 		do
 			echo "[ $count / $docker_images_count ] - $i"
-			docker load < $tarball_images_dir/$i
+			$Comm load < $tarball_images_dir/$i
 			let count=$count+1
 		done
         
@@ -263,13 +263,13 @@ Stop_container(){
 }
 
 Purge_image(){
-	$Comm rm -v $(docker ps --filter status=exited -q 2>/dev/null) 2>/dev/null
-	$Comm rm -v $(docker ps --filter status=created -q 2>/dev/null) 2>/dev/null
+	$Comm rm -v $($Comm ps --filter status=exited -q 2>/dev/null) 2>/dev/null
+	$Comm rm -v $($Comm ps --filter status=created -q 2>/dev/null) 2>/dev/null
 }
 
 All_stop_process(){
-	$Comm ps  |awk '{print $1}' | egrep -v 'CONTAINER' | xargs  docker stop
-	echo "---------------------  $Comm docker ps  |awk '{print $1}' | egrep -v 'CONTAINER' | xargs  docker stop----------------------"
+	$Comm ps  |awk '{print $1}' | egrep -v 'CONTAINER' | xargs  $Comm stop
+	echo "---------------------  $Comm  ps  |awk '{print $1}' | egrep -v 'CONTAINER' | xargs  $Comm  stop----------------------"
 }
 
 Purge_Old_image(){
@@ -289,7 +289,7 @@ Purge_Old_image(){
 }
 
 Clean_volume(){
-	$Comm volume ls -qf dangling=true | xargs docker volume rm
+	$Comm volume ls -qf dangling=true | xargs $Comm volume rm
 }
 
 
