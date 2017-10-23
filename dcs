@@ -212,22 +212,22 @@ ci_image(){
 save_all_images(){
 	docker_images=$(docker images | egrep -v "^REPOSITORY" | awk '{print $1":"$2}')
 	docker_image_count=$(docker images | egrep -v "^REPOSITORY" | wc -l)
-	mkdir -p ~/tmp/
+	mkdir -p ~/tmp`date +%Y%m%d`/
 
 		echo " === Exporting the image to files === "
 		count=1
 		for i in $docker_images
 		do
 			echo "[ $count / $docker_image_count ] - $i"
-			tar_name=$(echo "$i" |sed 's/:/_/g')
-			docker save $i > ~/tmp/$tar_name.tgz
+			tar_name=$(echo "$i" |sed -e 's/:/_/g' -e 's#/#_#g' )
+			docker save $i > ~/tmp`date +%Y%m%d`/$tar_name.tgz
 			let count=$count+1
 		done
 	echo " === Compressing image files to Tarball file  (in ~/docker_images_output.tgz) === "
-	cd ~/tmp/
+	cd ~/tmp`date +%Y%m%d`/
 	tar zcf  ../docker_images_output.tgz *.tgz 2> /dev/null
 	cd ..
-	rm -Rf ~/tmp 2> /dev/null
+	rm -Rf ~/tmp`date +%Y%m%d` 2> /dev/null
 
 	echo " === Done  === "
 	echo " === You can use this file ~/docker_images_output.tgz for Backup or magration === "
