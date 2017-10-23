@@ -241,9 +241,11 @@ load_all_images(){
 			echo " Please make sure the Directory name !!"
 			exit
 		fi
-
-	docker_images_tgz=$(ls $tarball_images_dir)
-	docker_images_count=$(ls $tarball_images_dir |wc -l)
+	cd $tarball_images_dir
+	## Exception for the save file from dcs
+	tar zxfv docker_images_output.tgz  2> /dev/null
+	docker_images_tgz=$(ls $tarball_images_dir |grep ".tgz" |egrep -v "docker_images_output.tgz")
+	docker_images_count=$(ls $tarball_images_dir |grep ".tgz" |egrep -v "docker_images_output.tgz" |wc -l)
 	echo " === Decompressing the file and apply the image to the Docker... === "
 	count=1
 		for i in $docker_images_tgz
