@@ -102,5 +102,8 @@ test_dcss
 #### 2017/07/6- update
 1. update for `prune` command all clean(volume/network/process/image)
 
+#### 2017/10/23- update
+1. Function update: `save` for All docker image dump to the local file
+2. Function update: `load` for the local docker image file to the Docker images list
 
-_
+

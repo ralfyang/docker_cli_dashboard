@@ -97,3 +97,7 @@ test_dcss
 1. `prune` 옵션을 사용한 docker 정리하기 기능 추가(volume/network/process/image)
 
 
+#### 2017/10/23- update
+1. `save` 기능을 사용하여 docker 내부의 모든 이미들을 로컬파일로 저장하기 기능 추가
+1. `load` 기능을 사용하여 로컬에 저장된 이미지 파일을 Docker에 등록하는 기능 추가
+

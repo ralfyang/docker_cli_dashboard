@@ -1,5 +1,5 @@
 #!/bin/bash
-### docker container control box  V. 1.98
+### docker container control box  V. 1.99
 ### Made by ralf goody80762@gmail.com
 #
 
@@ -103,9 +103,9 @@ echo "= Processor ==========================  = Image ==========================
 echo " Run the container ---------- [ run  ]| Pull Image     ------------- [ pull ] | Commit --------------------- [ ci   ]"
 echo " Start & Attach ------------- [ sa   ]| Remove Image   ------------- [ rmi  ] | Tagging & Push ------------- [ push ]"
 echo " Stop           ------------- [ stop ]| Build Image    ------------- [ build] | Prune image/volume/network - [ prune]"
-echo " Send command   ------------- [ exec ]| Purge volume   ------------- [ clean] | "
-echo " Into the running docker ---- [ it   ]| ===================================== | ====================================="
-echo " Remove PS      ------------- [ rm   ]|"
+echo " Send command   ------------- [ exec ]| Purge volume   ------------- [ clean] |"
+echo " Into the running docker ---- [ it   ]| Save All images to tarball - [ save ] |"
+echo " Remove PS      ------------- [ rm   ]| Load the image from DIR ---- [ load ] |"
 echo " Purge Processor ------------ [ purge]| Cli ---------- [ Type free as below ] | Exit                           Ctrl+c"
 echo " All Processor stop!! ------- [ halt ]| ex) stop 910930 19809 102039 09103    | upgrade check & upgrade       upgrade"
 echo "======================================| ===================================== | ====================================="
@@ -206,6 +206,55 @@ remove_image(){
 ci_image(){
 	$Comm commit ${ProcessorAIDArray[$1]} $2
 	echo "$Comm commit ${ProcessorAIDArray[$1]} $2"
+}
+
+
+save_all_images(){
+	docker_images=$(docker images | egrep -v "^REPOSITORY" | awk '{print $1":"$2}')
+	docker_image_count=$(docker images | egrep -v "^REPOSITORY" | wc -l)
+	mkdir -p ~/tmp/
+
+		echo " === Exporting the image to files === "
+		count=1
+		for i in $docker_images
+		do
+			echo "[ $count / $docker_image_count ] - $i"
+			tar_name=$(echo "$i" |sed 's/:/_/g')
+			docker save $i > ~/tmp/$tar_name.tgz
+			let count=$count+1
+		done
+	echo " === Compressing image files to Tarball file  (in ~/docker_images_output.tgz) === "
+	cd ~/tmp/
+	tar zcf  ../docker_images_output.tgz *.tgz 2> /dev/null
+	cd ..
+	rm -Rf ~/tmp 2> /dev/null
+
+	echo " === Done  === "
+	echo " === You can use this file ~/docker_images_output.tgz for Backup or magration === "
+	sleep 1
+}
+
+load_all_images(){
+	echo " Please insert a Directory name as the file existed "
+	read tarball_images_dir
+		if [[ $tarball_images_dir = "" ]];then
+			echo " Please make sure the Directory name !!"
+			exit
+		fi
+
+	docker_images_tgz=$(ls $tarball_images_dir)
+	docker_images_count=$(ls $tarball_images_dir |wc -l)
+	echo " === Decompressing the file and apply the image to the Docker... === "
+	count=1
+		for i in $docker_images_tgz
+		do
+			echo "[ $count / $docker_images_count ] - $i"
+			docker load < $tarball_images_dir/$i
+			let count=$count+1
+		done
+        
+	echo " === Done  === "
+	sleep 1
 }
 
 Stop_container(){
@@ -364,6 +413,22 @@ Clean_volume(){
 						Clean_volume
 				fi
 				;;
+
+			save)
+				if [[ $answ != "y" ]];then
+					echo " == All images will be backup to file. OK ? [ y/n ]:"
+					read SaveImg
+						if [[ $SaveImg = "y" ]];then
+				        	        save_all_images
+						fi
+				else
+						save_all_images
+				fi
+				;;
+			load)
+				load_all_images
+				;;
+
 			rmi)
 				echo " == Please insert a number for remove the image [01 - $ImageNum] "
 				read RmImageNum
