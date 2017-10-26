@@ -232,12 +232,11 @@ read Save_Dir
 			$Comm save $i > $Save_Dir/tmp`date +%Y%m%d`/$tar_name.tgz
 			let count=$count+1
 		done
-	echo " === Compressing image files to Tarball file  (in ~/docker_images_output.tgz) === "
-	cd $Save_Dir/tmp`date +%Y%m%d`
-	tar zcf  ../docker_images_output.tgz *.tgz 2> /dev/null
-	cd ..
+        echo " === Compressing image files to Tarball file  (in $Save_Dir/docker_images_output.tgz) === "
+        cd $Save_Dir/tmp`date +%Y%m%d`
+        tar zcvf  $Save_Dir/docker_images_output.tgz *.tgz 2> /dev/null
+	cd $Save_Dir
 	rm -Rf $Save_Dir/tmp`date +%Y%m%d` 2> /dev/null
-
 	echo " === Done  === "
 	echo " === You can use this file $Save_Dir/docker_images_output.tgz for Backup or magration === "
 	sleep 1
