@@ -210,9 +210,18 @@ ci_image(){
 
 
 save_all_images(){
+
+echo "Please make sure the directory for backup [default= ~/]:"
+read Save_Dir
+	if [[ $Save_Dir = "" ]];then
+		$Save_Dir="~/"
+	else
+		echo " Docker image will be save in \"$Save_Dir\" "
+	fi
+
 	docker_images=$($Comm images | egrep -v "^REPOSITORY" | awk '{print $1":"$2}')
 	docker_image_count=$($Comm images | egrep -v "^REPOSITORY" | wc -l)
-	mkdir -p ~/tmp`date +%Y%m%d`/
+	mkdir -p $Save_Dir/tmp`date +%Y%m%d`/
 
 		echo " === Exporting the image to files === "
 		count=1
@@ -220,17 +229,17 @@ save_all_images(){
 		do
 			echo "[ $count / $docker_image_count ] - $i"
 			tar_name=$(echo "$i" |sed -e 's/:/_/g' -e 's#/#_#g' )
-			$Comm save $i > ~/tmp`date +%Y%m%d`/$tar_name.tgz
+			$Comm save $i > $Save_Dir/tmp`date +%Y%m%d`/$tar_name.tgz
 			let count=$count+1
 		done
 	echo " === Compressing image files to Tarball file  (in ~/docker_images_output.tgz) === "
-	cd ~/tmp`date +%Y%m%d`/
+	cd $Save_Dir/tmp`date +%Y%m%d`
 	tar zcf  ../docker_images_output.tgz *.tgz 2> /dev/null
 	cd ..
-	rm -Rf ~/tmp`date +%Y%m%d` 2> /dev/null
+	rm -Rf $Save_Dir/tmp`date +%Y%m%d` 2> /dev/null
 
 	echo " === Done  === "
-	echo " === You can use this file ~/docker_images_output.tgz for Backup or magration === "
+	echo " === You can use this file $Save_Dir/docker_images_output.tgz for Backup or magration === "
 	sleep 1
 }
 
