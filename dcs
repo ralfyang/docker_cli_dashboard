@@ -232,13 +232,13 @@ read Save_Dir
 			$Comm save $i > $Save_Dir/tmp`date +%Y%m%d`/$tar_name.tgz
 			let count=$count+1
 		done
-        echo " === Compressing image files to Tarball file  (in $Save_Dir/docker_images_output.tgz) === "
+        echo " === Compressing image files to Tarball file  (in $Save_Dir/docker_images_output_`hostname`_`date +%Y%m%d`.tgz) === "
         cd $Save_Dir/tmp`date +%Y%m%d`
-        tar zcvf  $Save_Dir/docker_images_output.tgz *.tgz 2> /dev/null
+        tar zcvf  $Save_Dir/docker_images_output_`hostname`_`date +%Y%m%d`.tgz *.tgz 2> /dev/null
 	cd $Save_Dir
 	rm -Rf $Save_Dir/tmp`date +%Y%m%d` 2> /dev/null
 	echo " === Done  === "
-	echo " === You can use this file $Save_Dir/docker_images_output.tgz for Backup or magration === "
+	echo " === You can use this file $Save_Dir/docker_images_output_`hostname`_`date +%Y%m%d`.tgz for Backup or magration === "
 	sleep 1
 }
 
@@ -251,9 +251,9 @@ load_all_images(){
 		fi
 	cd $tarball_images_dir
 	## Exception for the save file from dcs
-	tar zxfv docker_images_output.tgz  2> /dev/null
-	docker_images_tgz=$(ls $tarball_images_dir |grep ".tgz" |egrep -v "docker_images_output.tgz")
-	docker_images_count=$(ls $tarball_images_dir |grep ".tgz" |egrep -v "docker_images_output.tgz" |wc -l)
+	tar zxfv docker_images_output*.tgz  2> /dev/null
+	docker_images_tgz=$(ls $tarball_images_dir |grep ".tgz" |egrep -v "docker_images_output*.tgz")
+	docker_images_count=$(ls $tarball_images_dir |grep ".tgz" |egrep -v "docker_images_output*.tgz" |wc -l)
 	echo " === Decompressing the file and apply the image to the Docker... === "
 	count=1
 		for i in $docker_images_tgz
