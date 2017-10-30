@@ -214,7 +214,7 @@ save_all_images(){
 echo "Please make sure the directory for backup [default= ~/]:"
 read Save_Dir
 	if [[ $Save_Dir = "" ]];then
-		$Save_Dir="~/"
+		Save_Dir="$HOME"
 	else
 		echo " Docker image will be save in \"$Save_Dir\" "
 	fi
