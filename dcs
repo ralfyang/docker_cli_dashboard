@@ -1,5 +1,5 @@
 #!/bin/bash
-### docker container control box  V. 2.0
+### docker container control box  V. 2.1
 ### Made by ralf goody80762@gmail.com
 #
 
@@ -101,13 +101,14 @@ echo ""
 echo " Please Insert a command as below  :) "
 echo "= Processor ==========================  = Image ==============================  = Commit & Push ====================="
 echo " Run the container ---------- [ run  ]| Pull Image     ------------- [ pull ] | Commit --------------------- [ ci   ]"
-echo " Start & Attach ------------- [ sa   ]| Remove Image   ------------- [ rmi  ] | Tagging & Push ------------- [ push ]"
-echo " Stop           ------------- [ stop ]| Build Image    ------------- [ build] | Prune image/volume/network - [ prune]"
-echo " Send command   ------------- [ exec ]| Purge volume   ------------- [ clean] |"
+echo " Start & Attach    ---------- [ sa   ]| Remove Image   ------------- [ rmi  ] | Tagging & Push ------------- [ push ]"
+echo " Stop              ---------- [ stop ]| Build Image    ------------- [ build] | Prune image/volume/network - [ prune]"
+echo " Send command      ---------- [ exec ]| Purge volume   ------------- [ clean] |"
 echo " Into the running docker ---- [ it   ]| Save All images to tarball - [ save ] |"
-echo " Remove PS      ------------- [ rm   ]| Load the image from DIR ---- [ load ] |"
-echo " Purge Processor ------------ [ purge]| Cli ---------- [ Type free as below ] | Exit                           Ctrl+c"
-echo " All Processor stop!! ------- [ halt ]| ex) stop 910930 19809 102039 09103    | upgrade check & upgrade       upgrade"
+echo " Remove PS         ---------- [ rm   ]| Load the image from DIR ---- [ load ] |"
+echo " Show log          ---------- [ log  ]| --------------------------------------| "
+echo " Purge Processor   ---------- [ purge]| Cli ---------- [ Type free as below ] | Exit                           Ctrl+c"
+echo " All Processor stop!! ------- [ aps  ]| ex) stop 910930 19809 102039 09103    | upgrade check & upgrade       upgrade"
 echo "======================================| ===================================== | ====================================="
 
 }
@@ -267,6 +268,14 @@ load_all_images(){
 	sleep 1
 }
 
+Log_container(){
+	$Comm logs ${ProcessorAIDArray[$1]}
+#	echo "$Comm log ${ProcessorAIDArray[$1]}"
+	echo ""
+	echo " - Please insert an any key if you all done -"
+	read
+}
+
 Stop_container(){
 	$Comm stop ${ProcessorAIDArray[$1]}
 	echo "$Comm stop ${ProcessorAIDArray[$1]}"
@@ -379,7 +388,7 @@ Clean_volume(){
 						echo " == No image name == "
 					fi
 				;;
-			halt)
+			aps)
 				if [[ $answ != "y" ]];then
 					echo " == All active processor will be stop. Are sure that ? [ y/n ]:"
 					read AllprocessQ
@@ -499,6 +508,15 @@ Clean_volume(){
 					fi
 				;;
 
+			log)
+				echo " == Please insert a number of Active processor [01 - $PsANum] "
+				read LogNum
+					if [[ $LogNum != "" ]];then
+							Log_container $LogNum
+					else
+						echo " == No image No. == "
+					fi
+				;;
 			stop)
 				echo " == Please insert a number of Active processor [01 - $PsANum] "
 				read StopNum

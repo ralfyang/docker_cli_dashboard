@@ -101,3 +101,7 @@ test_dcss
 1. `save` 기능을 사용하여 docker 내부의 모든 이미들을 로컬파일로 저장하기 기능 추가
 1. `load` 기능을 사용하여 로컬에 저장된 이미지 파일을 Docker에 등록하는 기능 추가
 
+
+#### 2017/11/09- update
+1. `log` 기능을 사용하여 docker process의 log를 확인 하는 기능 추가
+2. 명령어 이름 변경: halt -> aps (all process stop)

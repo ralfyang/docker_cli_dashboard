@@ -107,3 +107,9 @@ test_dcss
 2. Function update: `load` for the local docker image file to the Docker images list
 
 
+#### 2017/11/09- update
+1. Function update: `log` for docker process log show
+2. Function name change: halt -> aps(all process stop) 
+
+
+
