@@ -536,7 +536,7 @@ Clean_volume(){
 					sudo rm -f /tmp/curl
 					chmod 755 $exefile
 					echo " === dcs has been updated!! - Version $Current_ver -> $Latest_ver ==="
-					sleep 3
+					exit 0
 				else
 					echo " === Now you have latest version of dcs - Version $Current_ver ==="
 					sleep 3
