@@ -269,6 +269,7 @@ load_all_images(){
 }
 
 Log_container(){
+	clear
 	$Comm logs ${ProcessorAIDArray[$1]}
 #	echo "$Comm log ${ProcessorAIDArray[$1]}"
 	echo ""
