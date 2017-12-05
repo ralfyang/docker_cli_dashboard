@@ -1,5 +1,5 @@
 #!/bin/bash
-### docker container control box  V. 2.1
+### docker container control box  V. 2.2
 ### Made by ralf goody80762@gmail.com
 #
 
@@ -488,8 +488,9 @@ Clean_volume(){
 
 				echo " == Please choose a number for tag and push [01 - $TagNum] "
 				read TagPush
+				echo  -e "\033[32;3;7m * Please login first to the Docker registry \033[0m ex) docker login"
 					if [[ $TagPush != "" ]];then
-						 echo "TagetPush=`grep \"^$TagPush \" $Tmp_tag | awk '{print $2":"$3}'`"
+						 echo "Taget image= `grep \"^$TagPush \" $Tmp_tag | awk '{print $2":"$3}'`"
 						 TagetPush=`grep "^$TagPush " $Tmp_tag | awk '{print $2":"$3}'`
 						if [[ $Docker_repo = "" ]];then
 							echo "== Do you need to make a tag ? [y / n]"
@@ -503,7 +504,6 @@ Clean_volume(){
 									$Comm push $TagetPush
 								fi
 						else
-							echo " - Please login 1st before the push command - ex) docker login"
 							$Comm tag $TagetPush $Docker_repo/$TagetPush
 							$Comm push $Docker_repo/$TagetPush
 						fi
