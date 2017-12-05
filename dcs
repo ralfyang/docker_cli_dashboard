@@ -21,7 +21,7 @@ Docker_repo=""
 ## find a command
 Docker_comm=`which docker | head -1`
 ## OS Check
-
+Docker_version=`docker -v | awk -F',' '{print $1}'`
 ## Check the sudo
 	if [[ `(which sudo 2> /dev/null)` = "" ]];then
 		SUDO=""
@@ -106,9 +106,9 @@ echo " Stop              ---------- [ stop ]| Build Image    ------------- [ bui
 echo " Send command      ---------- [ exec ]| Purge volume   ------------- [ clean] |"
 echo " Into the running docker ---- [ it   ]| Save All images to tarball - [ save ] |"
 echo " Remove PS         ---------- [ rm   ]| Load the image from DIR ---- [ load ] |"
-echo " Show log          ---------- [ log  ]| --------------------------------------| "
+echo " Show log          ---------- [ log  ]| --------------------------------------| upgrade check & upgrade       upgrade"
 echo " Purge Processor   ---------- [ purge]| Cli ---------- [ Type free as below ] | Exit                           Ctrl+c"
-echo " All Processor stop!! ------- [ aps  ]| ex) stop 910930 19809 102039 09103    | upgrade check & upgrade       upgrade"
+echo " All Processor stop!! ------- [ aps  ]| ex) stop 910930 19809 102039 09103    | $Docker_version"
 echo "======================================| ===================================== | ====================================="
 
 }
@@ -503,6 +503,7 @@ Clean_volume(){
 									$Comm push $TagetPush
 								fi
 						else
+							echo " - Please login 1st before the push command - ex) docker login"
 							$Comm tag $TagetPush $Docker_repo/$TagetPush
 							$Comm push $Docker_repo/$TagetPush
 						fi
