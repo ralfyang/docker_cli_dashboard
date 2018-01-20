@@ -105,7 +105,7 @@ echo " Start & Attach    ---------- [ sa   ]| Remove Image   ------------- [ rmi
 echo " Stop              ---------- [ stop ]| Build Image    ------------- [ build] | Prune image/volume/network - [ prune]"
 echo " Send command      ---------- [ exec ]| Purge volume   ------------- [ clean] |"
 echo " Into the running docker ---- [ it   ]| Save All images to tarball - [ save ] |"
-echo " Remove PS         ---------- [ rm   ]| Load the image from DIR ---- [ load ] |"
+echo " Remove PS         ---------- [ rm   ]| Load the image from DIR ---- [ load ] | Star here! - https://bit.ly/git_dcs"
 echo " Show log          ---------- [ log  ]| --------------------------------------| upgrade check & upgrade       upgrade"
 echo " Purge Processor   ---------- [ purge]| Cli ---------- [ Type free as below ] | Exit                           Ctrl+c"
 echo " All Processor stop!! ------- [ aps  ]| ex) stop 910930 19809 102039 09103    | $Docker_version"
@@ -192,7 +192,8 @@ rm_container(){
 }
 
 it_container(){
-        $Comm exec -it ${ProcessorAIDArray[$1]} /bin/sh
+#        $Comm exec -it ${ProcessorAIDArray[$1]} /bin/sh 
+        $Comm exec -it ${ProcessorAIDArray[$1]} /bin/bash -c "echo \"alias ll='ls -lai'\" >> ~/.bashrc && /bin/bash"
 }
 
 pull_image(){
