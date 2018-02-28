@@ -1,5 +1,5 @@
 #!/bin/bash
-### docker container control box  V. 2.3
+### docker container control box  V. 2.4
 ### Made by ralf goody80762@gmail.com
 #
 
@@ -100,10 +100,10 @@ echo ""
 #echo "======================================"
 echo " Please Insert a command as below  :) "
 echo "= Processor ==========================  = Image ==============================  = Commit & Push ====================="
-echo " Run the container ---------- [ run  ]| Pull Image     ------------- [ pull ] | Commit --------------------- [ ci   ]"
-echo " Start & Attach    ---------- [ sa   ]| Remove Image   ------------- [ rmi  ] | Tagging & Push ------------- [ push ]"
-echo " Stop              ---------- [ stop ]| Build Image    ------------- [ build] | Prune image/volume/network - [ prune]"
-echo " Send command      ---------- [ exec ]| Purge volume   ------------- [ clean] |"
+echo " Run the container ---------- [ run  ]| Pull Image     ------------- [ pull ] | Commit --------------------- [commit]"
+echo " Start & Attach    ---------- [ sa   ]| Remove Image   ------------- [ rmi  ] | Login to registry ---------- [ login]"
+echo " Stop              ---------- [ stop ]| Build Image    ------------- [ build] | Tagging & Push ------------- [ push ]"
+echo " Send command      ---------- [ exec ]| Purge volume   ------------- [ clean] | Prune image/volume/network - [ prune]"
 echo " Into the running docker ---- [ it   ]| Save All images to tarball - [ save ] |"
 echo " Remove PS         ---------- [ rm   ]| Load the image from DIR ---- [ load ] | * Star here! - https://bit.ly/git_dcs"
 echo " Show log          ---------- [ log  ]| --------------------------------------| upgrade check & upgrade       upgrade"
@@ -112,7 +112,6 @@ echo " All Processor stop!! ------- [ aps  ]| ex) stop 910930 19809 102039 09103
 echo "======================================| ===================================== | ====================================="
 
 }
-
 
 	if [[ $extra_input = "" ]];then
 		Print_screen
@@ -200,6 +199,24 @@ pull_image(){
 	$Comm pull $1
 }
 
+login_repository(){
+Registry=$1
+	if [[ $Registry = "" ]];then
+		echo "Do you want to login to Private registry ? [y/N]"
+			read que_registry
+			if [[ $que_registry = "y" ]] || [[ $que_registry = "Y" ]] ;then
+				echo " Please insert a Private registry url:"
+				read Registry
+				$Comm login $Registry
+			else
+				$Comm login
+			fi
+	else
+		$Comm login $Registry
+	fi
+
+
+}
 
 remove_image(){
 	$Comm rmi -f ${ImageIDArray[$1]}
@@ -449,6 +466,9 @@ Clean_volume(){
 			load)
 				load_all_images
 				;;
+			login)
+				login_repository $1
+				;;
 
 			rmi)
 				echo " == Please insert a number for remove the image [01 - $ImageNum] "
@@ -465,7 +485,7 @@ Clean_volume(){
 					fi
 				;;
 
-			ci)
+			commit)
 				echo " == Please insert a number of Active processor [01 - $PsANum] "
 				read CiNum
 				echo " == Please make sure the name for use:"

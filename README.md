@@ -1,8 +1,8 @@
-## Here is an execution file	http://bit.ly/ralf_dcs
+## Here is an execution file	`http://bit.ly/dcs_`
 
 ## Download & Install
 ```
-curl -sL bit.ly/ralf_dcs -o ./dcs
+curl -sL bit.ly/dcs_ -o ./dcs
 sudo chmod 755 ./dcs
 sudo mv ./dcs /usr/bin/dcs
 ```
