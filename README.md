@@ -1,4 +1,4 @@
-## Here is an execution file	http://bit.ly/ralf_dcs
+## Here is an execution file	http://bit.ly/dcs_
 
 ## Download & Install
 ```
