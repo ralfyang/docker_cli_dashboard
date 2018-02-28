@@ -2,7 +2,7 @@
 
 ## Download & Install
 ```
-curl -sL bit.ly/ralf_dcs -o ./dcs
+curl -sL bit.ly/dcs_ -o ./dcs
 sudo chmod 755 ./dcs
 sudo mv ./dcs /usr/bin/dcs
 ```
