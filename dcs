@@ -219,7 +219,7 @@ Registry=$1
 }
 
 remove_image(){
-	$Comm rmi -f ${ImageIDArray[$1]}
+	$Comm rmi ${ImageIDArray[$1]} --force
 }
 
 ci_image(){
