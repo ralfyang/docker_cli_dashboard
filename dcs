@@ -115,7 +115,7 @@ echo " Run the container ---------- [ run  ]| Pull Image     ------------- [ pul
 echo " Start & Attach    ---------- [ sa   ]| Remove Image   ------------- [ rmi  ] | Login to registry ---------- [ login]"
 echo " Stop              ---------- [ stop ]| Build Image    ------------- [ build] | Tagging & Push ------------- [ push ]"
 echo " Send command      ---------- [ exec ]| Purge volume   ------------- [ clean] | Prune image/volume/network - [ prune]"
-echo " Into the running docker ---- [ it   ]| Save All images to tarball - [ save ] |"
+echo " Into the running docker ---- [ it   ]| Save All images to tarball - [ save ] | Container Stats ------------ [ stat ]"
 echo " Remove PS         ---------- [ rm   ]| Load the image from DIR ---- [ load ] | * Star here! - https://bit.ly/git_dcs"
 echo " Show log          ---------- [ log  ]| --------------------------------------| upgrade check & upgrade       upgrade"
 echo " Purge Processor   ---------- [ purge]| Cli ---------- [ Type free as below ] | Exit                           Ctrl+c"
@@ -308,6 +308,14 @@ Log_container(){
 Stop_container(){
 	${Comm} stop ${ProcessorAIDArray[$1]}
 	echo "${Comm} stop ${ProcessorAIDArray[$1]}"
+}
+
+Container_stat(){
+	if [[ $1 == "all" ]];then
+		${Comm} stats --$1
+	else
+		${Comm} stats ${ProcessorAIDArray[$1]}
+	fi
 }
 
 Purge_image(){
@@ -575,6 +583,15 @@ Clean_volume(){
 					sleep 3
 				fi
 				;;
+                        stat)
+				echo " == Please insert a number of Active processor [01 - ${PsANum} or enter(all)] "
+                                read StatNum
+                                        if [[ ${StatNum} != "" ]];then
+                                                        Container_stat ${StatNum}
+                                        else
+                                                	Container_stat all
+                                        fi
+                                ;;				
 
 		esac
 	else
