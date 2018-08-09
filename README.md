@@ -114,3 +114,4 @@ test_dcss
 2. Function update: `run` just run container without going into container
 3. Function update: Remove `attach` from `sa` and rename `sa` to `start`
 4. Change code to match the bash syntax
+5. Add command prompt
