@@ -121,7 +121,7 @@ echo " Show log          ---------- [ log  ]| ----------------------------------
 echo " Purge Processor   ---------- [ purge]| Cli ---------- [ Type free as below ] | Exit                           Ctrl+c"
 echo " All Processor stop!! ------- [ aps  ]| ex) stop 910930 19809 102039 09103    | ${Docker_version}"
 echo "======================================| ===================================== | ====================================="
-
+printf "CMD>> "
 }
 
 	if [[ ${extra_input} = "" ]];then
