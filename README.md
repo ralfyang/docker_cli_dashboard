@@ -1,10 +1,8 @@
-## Download & Install
+* Download & Install
 ```
-git clone https://github.com/t2sc0m/docker_cli_dashboard.git
-cd docker_cli_dashboard
+curl -sL bit.ly/dcs_ -o ./dcs
 sudo chmod 755 ./dcs
 sudo mv ./dcs /usr/bin/dcs
-cd ..;rm -rf docker_cli_dashboard
 ```
 
 # docker_cli_dashboard
