@@ -112,7 +112,7 @@ echo "======================================"
 echo " Please Insert a command as below  :) "
 echo "= Processor ==========================  = Image ==============================  = Commit & Push ====================="
 echo " Run the container ---------- [ run  ]| Pull Image     ------------- [ pull ] | Commit --------------------- [commit]"
-echo " Start & Attach    ---------- [ sa   ]| Remove Image   ------------- [ rmi  ] | Login to registry ---------- [ login]"
+echo " Start             ---------- [ start]| Remove Image   ------------- [ rmi  ] | Login to registry ---------- [ login]"
 echo " Stop              ---------- [ stop ]| Build Image    ------------- [ build] | Tagging & Push ------------- [ push ]"
 echo " Send command      ---------- [ exec ]| Purge volume   ------------- [ clean] | Prune image/volume/network - [ prune]"
 echo " Into the running docker ---- [ it   ]| Save All images to tarball - [ save ] | Container Stats ------------ [ stat ]"
@@ -151,13 +151,14 @@ run_container(){
 			port_parser=$(echo "${portcheck}"  | sed -e 's/ [0-9]*:[0-9]/ -p&/g')
 			port_expose="-p ${port_parser}"
 		fi
-	${Comm} run ${port_expose} -it --name $2 ${ImageIDArray[$1]}  /bin/sh
+	#${Comm} run ${port_expose} -it --name $2 ${ImageIDArray[$1]}  /bin/sh
+	${Comm} run ${port_expose} -id --name $2 ${ImageIDArray[$1]}
 }
 
 
-sa_container(){
+start_container(){
 	${Comm} start $1
-	${Comm} attach $1
+#	${Comm} attach $1
 }
 
 
@@ -374,11 +375,11 @@ Clean_volume(){
 					fi
 
 				;;
-			sa)
+			start)
 				echo " == Please insert docker name for start :"
 				read St_docker
 					if [[ ${St_docker} != "" ]];then
-				                sa_container ${St_docker}
+				                start_container ${St_docker}
 					else
 						echo " == No Processor ID == "
 					fi
@@ -389,7 +390,7 @@ Clean_volume(){
 				echo " == Please insert a command for send to container ?"
 				read CommandToContainer
 					if [[ ${ActiveProcessorNum} != "" ]];then
-				                comm_container ${ActiveProcessorNum} ${Comm}andToContainer
+				                comm_container ${ActiveProcessorNum} ${CommandToContainer}
 					else
 						echo " == No Processor No. == "
 					fi
