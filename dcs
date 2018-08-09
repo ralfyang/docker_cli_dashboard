@@ -151,7 +151,6 @@ run_container(){
 			port_parser=$(echo "${portcheck}"  | sed -e 's/ [0-9]*:[0-9]/ -p&/g')
 			port_expose="-p ${port_parser}"
 		fi
-	#${Comm} run ${port_expose} -it --name $2 ${ImageIDArray[$1]}  /bin/sh
 	${Comm} run ${port_expose} -id --name $2 ${ImageIDArray[$1]}
 }
 
@@ -300,7 +299,6 @@ load_all_images(){
 Log_container(){
 	clear
 	${Comm} logs ${ProcessorAIDArray[$1]}
-#	echo "${Comm} log ${ProcessorAIDArray[$1]}"
 	echo ""
 	echo " - Please insert an any key if you all done -"
 	read
