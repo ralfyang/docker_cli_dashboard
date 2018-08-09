@@ -1,4 +1,4 @@
-* Download & Install
+# Download & Install
 ```
 git clone https://github.com/t2sc0m/docker_cli_dashboard.git
 cd docker_cli_dashboard
