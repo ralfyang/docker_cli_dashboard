@@ -142,6 +142,8 @@ ProcessorAIDArray=($(cat ${Tmp_psAfile} | awk '{print $3}' | tail -n +5))
 
 
 ## Function for command as below
+# 2018.08.08 change container start options 
+# -it /bin/sh -->  -id
 run_container(){
 	echo " == Do you need to make port forwarding ? [host-port:container-port or null] "
 	read portcheck
@@ -154,7 +156,7 @@ run_container(){
 	${Comm} run ${port_expose} -id --name $2 ${ImageIDArray[$1]}
 }
 
-
+# 2018-08.09 change sa to start & delete attach
 start_container(){
 	${Comm} start $1
 #	${Comm} attach $1
@@ -309,6 +311,7 @@ Stop_container(){
 	echo "${Comm} stop ${ProcessorAIDArray[$1]}"
 }
 
+# 2018.08.08 Add function
 Container_stat(){
 	if [[ $1 == "all" ]];then
 		${Comm} stats --$1
@@ -373,6 +376,7 @@ Clean_volume(){
 					fi
 
 				;;
+			# 2018.08.08 change sa to start
 			start)
 				echo " == Please insert docker name for start :"
 				read St_docker
@@ -582,7 +586,8 @@ Clean_volume(){
 					sleep 3
 				fi
 				;;
-                        stat)
+                        # 2018.08.08 add stat command
+			stat)
 				echo " == Please insert a number of Active processor [01 - ${PsANum} or enter(all)] "
                                 read StatNum
                                         if [[ ${StatNum} != "" ]];then
