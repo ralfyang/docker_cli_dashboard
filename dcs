@@ -1,5 +1,5 @@
 #!/bin/bash
-### docker container control box  V. 2.51
+### docker container control box  V. 2.52
 ### Made by ralf goody80762@gmail.com
 ### Rewritten by tescom tescom@atdt01410.com 2018.08.08
 
@@ -10,7 +10,7 @@ BUildDirConf="${HOME}/build_dir.conf"
 	fi
 extra_input=$1
 BuildDir=$(cat ${BUildDirConf})
-exefile=$(which dcs)
+exefile=$(command -v dcs)
 
 
 ## Please modify under variable for the private repository if you have.
@@ -22,7 +22,7 @@ HOST=$(hostname)
 DATE=$(date +%Y%m%d)
 
 ## find a command
-Docker_comm=$(which docker | head -1)
+Docker_comm=$(command -v docker)
 ## OS Check
 Docker_version=$(docker -v | awk -F',' '{print $1}')
 ## Check the sudo
@@ -34,7 +34,7 @@ Docker_version=$(docker -v | awk -F',' '{print $1}')
 
 Comm="${SUDO} ${Docker_comm}"
 
-ChkOS=$(cat /etc/*-release 2> /dev/null | head -1)
+#ChkOS=$(cat /etc/*-release 2> /dev/null | head -1)
         if [[ $(uname) == Linux ]];then
 			osv="linux"
 		elif [[ $(uname) == Darwin ]];then
@@ -57,7 +57,7 @@ exit 1
 
 
 ### Break sign catch for line break fix
-trap exit_abnormal SIGINT SIGTERM SIGKILL
+trap exit_abnormal SIGINT SIGTERM
 
 
 
@@ -126,7 +126,7 @@ printf "CMD>> "
 
 	if [[ ${extra_input} = "" ]];then
 		Print_screen
-		read CommandX
+		read -r CommandX
 	else
 		CommandX=${extra_input}
 	fi
@@ -140,13 +140,12 @@ ImageIDArray=($(cat ${Tmp_imgfile} | awk '{print $5}' | tail -n +4))
 ProcessorIDArray=($(cat ${Tmp_psfile} | awk '{print $3}' | tail -n +5))
 ProcessorAIDArray=($(cat ${Tmp_psAfile} | awk '{print $3}' | tail -n +5))
 
-
 ## Function for command as below
 # 2018.08.08 change container start options 
 # -it /bin/sh -->  -id
 run_container(){
 	echo " == Do you need to make port forwarding ? [host-port:container-port or null] "
-	read portcheck
+	read -r portcheck
 		if [[ ${portcheck} = "" ]];then
 			port_expose=""
 		else
@@ -166,7 +165,7 @@ start_container(){
 comm_container(){
 	${Comm} exec ${ProcessorAIDArray[$1]} $2
 	echo " - Please insert a any key if you have done - "
-	read
+	read -r
 }
 
 build_image(){
@@ -174,7 +173,7 @@ build_image(){
 	if [[ ! -d ${BuildDir} ]];then
 		echo "${BAR}"
 		echo " Please insert a Directory for image build under the Dockerfile [ex) /data/git/dockerfiles_dir]"
-		read ReadDir
+		read -r ReadDir
 		#sudo sed -i "s#^BuildDir=\"\"#BuildDir=\"${ReadDir}\"#g" ${exefile}
 		echo "${ReadDir}" > ${BUildDirConf}
 		cd ${ReadDir} || return
@@ -185,7 +184,7 @@ build_image(){
 	if [[ ! -f ./docker_build_auto.sh ]];then
 		echo "${BAR}"
 		echo "Do you need to install docker_build_auto.sh here ? [ y/n ]"
-		read Answ
+		read -r Answ
 			if [[ ${Answ} = "y" ]] || [[ ${Answ} = "Y" ]];then
 				wget goody80.github.io/docker_build_auto/docker_build_auto.sh
 				sudo chmod 755 docker_build_auto.sh
@@ -215,10 +214,10 @@ login_repository(){
 Registry=$1
 	if [[ ${Registry} = "" ]];then
 		echo "Do you want to login to Private registry ? [y/N]"
-			read que_registry
+			read -r que_registry
 			if [[ ${que_registry} = "y" ]] || [[ ${que_registry} = "Y" ]] ;then
 				echo " Please insert a Private registry url:"
-				read Registry
+				read -r Registry
 				${Comm} login ${Registry}
 			else
 				${Comm} login
@@ -242,16 +241,16 @@ ci_image(){
 
 save_all_images(){
 
-echo "Please make sure the directory for backup [default= ~/]:"
-read Save_Dir
+echo "Please make sure the directory for backup [default= {User_Home}]:"
+read -r Save_Dir
 	if [[ ${Save_Dir} = "" ]];then
 		Save_Dir="${HOME}"
 	else
 		echo " Docker image will be save in \"${Save_Dir}\" "
 	fi
 
-	docker_images=$(${Comm} images | egrep -v "^REPOSITORY" | awk '{print $1":"$2}')
-	docker_image_count=$(${Comm} images | egrep -v "^REPOSITORY" | wc -l)
+	docker_images=$(${Comm} images | grep -v "^REPOSITORY" | awk '{print $1":"$2}')
+	docker_image_count=$(${Comm} images | grep -v "^REPOSITORY" | wc -l)
 	mkdir -p ${Save_Dir}/tmp${DATE}/
 
 		echo " === Exporting the image to files === "
@@ -261,11 +260,11 @@ read Save_Dir
 			echo "[ ${count} / ${docker_image_count} ] - ${i}"
 			tar_name=$(echo "${i}" |sed -e 's/:/_/g' -e 's#/#_#g' )
 			${Comm} save ${i} > ${Save_Dir}/tmp${DATE}/${tar_name}.tgz
-			let count=${count}+1
+			count=$(( count+1 ))
 		done
         echo " === Compressing image files to Tarball file  (in ${Save_Dir}/docker_images_output_${HOST}_${DATE}.tgz) === "
         cd ${Save_Dir}/tmp${DATE} || return
-        tar zcvf  ${Save_Dir}/docker_images_output_${HOST}_${DATE}.tgz *.tgz 2> /dev/null
+        tar zcvf  ${Save_Dir}/docker_images_output_${HOST}_${DATE}.tgz ./*.tgz 2> /dev/null
 	cd ${Save_Dir} || return
 	rm -Rf ${Save_Dir}/tmp${DATE} 2> /dev/null
 	echo " === Done  === "
@@ -275,7 +274,7 @@ read Save_Dir
 
 load_all_images(){
 	echo " Please insert a Directory name as the file existed "
-	read tarball_images_dir
+	read -r tarball_images_dir
 		if [[ ${tarball_images_dir} = "" ]];then
 			echo " Please make sure the Directory name !!"
 			exit
@@ -283,15 +282,15 @@ load_all_images(){
 	cd ${tarball_images_dir} || return
 	## Exception for the save file from dcs
 	tar zxfv docker_images_output*.tgz  2> /dev/null
-	docker_images_tgz=$(ls ${tarball_images_dir} |grep ".tgz" |egrep -v "docker_images_output*.tgz")
-	docker_images_count=$(ls ${tarball_images_dir} |grep ".tgz" |egrep -v "docker_images_output*.tgz" |wc -l)
+	docker_images_tgz=$(ls ${tarball_images_dir} |grep ".tgz" |grep -v "^docker_images_output*.tgz")
+	docker_images_count=$(ls ${tarball_images_dir} |grep ".tgz" |grep -v "^docker_images_output*.tgz" |wc -l)
 	echo " === Decompressing the file and apply the image to the Docker... === "
 	count=1
 		for i in ${docker_images_tgz}
 		do
 			echo "[ ${count} / ${docker_images_count} ] - ${i}"
 			${Comm} load < ${tarball_images_dir}/${i}
-			let count=${count}+1
+			count=$(( count+1 ))
 		done
         
 	echo " === Done  === "
@@ -303,7 +302,7 @@ Log_container(){
 	${Comm} logs ${ProcessorAIDArray[$1]}
 	echo ""
 	echo " - Please insert an any key if you all done -"
-	read
+	read -r
 }
 
 Stop_container(){
@@ -326,8 +325,8 @@ Purge_image(){
 }
 
 All_stop_process(){
-	${Comm} ps  |awk '{print $1}' | egrep -v 'CONTAINER' | xargs  ${Comm} stop
-	echo "---------------------  ${Comm}  ps  |awk '{print $1}' | egrep -v 'CONTAINER' | xargs  ${Comm}  stop----------------------"
+	${Comm} ps  |awk '{print $1}' | grep -v 'CONTAINER' | xargs  ${Comm} stop
+	echo "---------------------  ${Comm}  ps  |awk '{print $1}' | grep -v 'CONTAINER' | xargs  ${Comm}  stop----------------------"
 }
 
 Purge_Old_image(){
@@ -354,7 +353,8 @@ Clean_volume(){
 
 	if [[ $(echo "${CommandX}" | grep '\-y') != "" ]];then
 		answ="y"
-		CommandX=$(echo "${CommandX}" | sed -e 's/ -y//g')
+		#CommandX=$(echo "${CommandX}" | sed -e 's/ -y//g')
+		CommandX=$("${CommandX// -y/ }")
 	fi
 
 
@@ -366,9 +366,9 @@ Clean_volume(){
 				;;
            		run)
 				echo " == Please insert a image number [01 - ${ImageNum} ]"
-				read ImageNum
+				read -r ImageNum
 				echo " == Please insert a new name for Run :"
-				read DockerName
+				read -r DockerName
 					if [[ ${DockerName} != "" ]];then
 				                run_container  ${ImageNum} ${DockerName}
 					else
@@ -379,7 +379,7 @@ Clean_volume(){
 			# 2018.08.08 change sa to start
 			start)
 				echo " == Please insert docker name for start :"
-				read St_docker
+				read -r St_docker
 					if [[ ${St_docker} != "" ]];then
 				                start_container ${St_docker}
 					else
@@ -388,9 +388,9 @@ Clean_volume(){
 				;;
 			exec)
 				echo " == Please insert a Active Processor number [01 - ${PsANum} ]"
-				read ActiveProcessorNum
+				read -r ActiveProcessorNum
 				echo " == Please insert a command for send to container ?"
-				read CommandToContainer
+				read -r CommandToContainer
 					if [[ ${ActiveProcessorNum} != "" ]];then
 				                comm_container ${ActiveProcessorNum} ${CommandToContainer}
 					else
@@ -399,7 +399,7 @@ Clean_volume(){
 				;;
 			it)
 				echo " == Please insert a Processor number for into that [01 - ${PsANum} ]"
-				read ProcessorNum
+				read -r ProcessorNum
 					if [[ ${ProcessorNum} != "" ]];then
 						it_container ${ProcessorNum}
 					else
@@ -408,9 +408,9 @@ Clean_volume(){
 				;;
 			rm)
 				echo " == Please insert a Processor number for Remove [01 - ${PsNum} ]"
-				read ProcessorNum
+				read -r ProcessorNum
 				echo " == [ ${ProcessorIDArray[${ProcessorNum}]} ]: Are you sure ? [y / n] "
-				read RmAnswer
+				read -r RmAnswer
 					if [[ ${ProcessorNum} != "" ]];then
 						if [[ ${RmAnswer} = "y" ]];then
 					                rm_container ${ProcessorNum}
@@ -421,7 +421,7 @@ Clean_volume(){
 				;;
 			pull)
 				echo " == Please insert an image name for pulls:"
-				read ImagePullname
+				read -r ImagePullname
 					if [[ ${ImagePullname} != "" ]];then
 				                pull_image ${ImagePullname}
 					else
@@ -431,7 +431,7 @@ Clean_volume(){
 			aps)
 				if [[ ${answ} != "y" ]];then
 					echo " == All active processor will be stop. Are sure that ? [ y/n ]:"
-					read AllprocessQ
+					read -r AllprocessQ
 						if [[ ${AllprocessQ} = "y" ]];then
 					                All_stop_process
 						fi
@@ -442,7 +442,7 @@ Clean_volume(){
 			purge)
 				if [[ ${answ} != "y" ]];then
 					echo " == No use processor will be remove. Are sure that ? [ y/n ]:"
-					read ImagePurge
+					read -r ImagePurge
 						if [[ ${ImagePurge} = "y" ]];then
 					                Purge_image
 						fi
@@ -453,7 +453,7 @@ Clean_volume(){
 			prune)
 				if [[ ${answ} != "y" ]];then
 					echo " == No use image will be remove. Are sure that ? [ y/n ]:"
-					read ImageOldPurge
+					read -r ImageOldPurge
 						if [[ ${ImageOldPurge} = "y" ]];then
 					                Purge_Old_image
 						fi
@@ -464,7 +464,7 @@ Clean_volume(){
 			clean)
 				if [[ ${answ} != "y" ]];then
 					echo " == No use volume will be remove. Are sure that ? [ y/n ]:"
-					read VolumeClean
+					read -r VolumeClean
 						if [[ ${VolumeClean} = "y" ]];then
 				        	        Clean_volume
 						fi
@@ -476,7 +476,7 @@ Clean_volume(){
 			save)
 				if [[ ${answ} != "y" ]];then
 					echo " == All images will be backup to file. OK ? [ y/n ]:"
-					read SaveImg
+					read -r SaveImg
 						if [[ ${SaveImg} = "y" ]];then
 				        	        save_all_images
 						fi
@@ -493,9 +493,9 @@ Clean_volume(){
 
 			rmi)
 				echo " == Please insert a number for remove the image [01 - ${ImageNum}] "
-				read RmImageNum
+				read -r RmImageNum
 				echo " == [ ${ImageIDArray[$RmImageNum]} ]: Are you sure ? [y / n]"
-				read RmIAnswer
+				read -r RmIAnswer
 
 					if [[ ${RmImageNum} != "" ]];then
 						if [[ ${RmIAnswer} = "y" ]];then
@@ -508,9 +508,9 @@ Clean_volume(){
 
 			commit)
 				echo " == Please insert a number of Active processor [01 - ${PsANum}] "
-				read CiNum
+				read -r CiNum
 				echo " == Please make sure the name for use:"
-				read CiAnswer
+				read -r CiAnswer
 					if [[ ${CiNum} != "" ]];then
 							ci_image ${CiNum} ${CiAnswer}
 					else
@@ -520,7 +520,7 @@ Clean_volume(){
 				;;
 			push)
 					if [[ ${Docker_repo} != "" ]];then
-						${Comm} images | fgrep -v "${Docker_repo}" | awk '{print NR-1,$0}' | sed -e 's/^0/ /g' > ${Tmp_tag}
+						${Comm} images | grep -v "${Docker_repo}" | awk '{print NR-1,$0}' | sed -e 's/^0/ /g' > ${Tmp_tag}
 					else
 						${Comm} images | awk '{print NR-1,$0}' | sed -e 's/^0/ /g' > ${Tmp_tag}
 					fi
@@ -529,17 +529,17 @@ Clean_volume(){
 				TagNum=$(cat ${Tmp_tag} | tail -1 | awk '{print $1}')
 
 				echo " == Please choose a number for tag and push [01 - ${TagNum}] "
-				read TagPush
+				read -r TagPush
 				echo  -e "\033[32;3;7m * Please login first to the Docker registry \033[0m ex) docker login"
 					if [[ ${TagPush} != "" ]];then
 						 echo "Taget image= $(grep \"^${TagPush} \" ${Tmp_tag} | awk '{print $2":"$3}')"
 						 TagetPush=$(grep "^${TagPush} " ${Tmp_tag} | awk '{print $2":"$3}')
 						if [[ ${Docker_repo} = "" ]];then
 							echo "== Do you need to make a tag ? [y / n]"
-							read Tagcomm
+							read -r Tagcomm
 								if [[ ${Tagcomm} = "y" ]];then
 									echo "Please insert a tag name:"
-									read Tagname
+									read -r Tagname
 									${Comm} tag ${TagetPush} ${Tagname}
 									${Comm} push ${Tagname}
 								else
@@ -554,7 +554,7 @@ Clean_volume(){
 
 			log)
 				echo " == Please insert a number of Active processor [01 - ${PsANum}] "
-				read LogNum
+				read -r LogNum
 					if [[ ${LogNum} != "" ]];then
 							Log_container ${LogNum}
 					else
@@ -563,7 +563,7 @@ Clean_volume(){
 				;;
 			stop)
 				echo " == Please insert a number of Active processor [01 - ${PsANum}] "
-				read StopNum
+				read -r StopNum
 					if [[ ${StopNum} != "" ]];then
 							Stop_container ${StopNum}
 					else
@@ -589,7 +589,7 @@ Clean_volume(){
                         # 2018.08.08 add stat command
 			stat)
 				echo " == Please insert a number of Active processor [01 - ${PsANum} or enter(all)] "
-                                read StatNum
+                                read -r StatNum
                                         if [[ ${StatNum} != "" ]];then
                                                         Container_stat ${StatNum}
                                         else
