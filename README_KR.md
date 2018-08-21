@@ -112,3 +112,7 @@ test_dcss
 3. `sa` 기능에서 `attach`를 빼고 명령어를 `start` 로 변경
 4. 코드 전체를 bash 문법에 맞게 변경
 5. 커맨드 프롬프트 추가
+
+#### 2018/08/21- update
+1. `run` 사용시 volume mount 옵션 기능 추가
+2. bash 문법에 맞게 몇몇 커맨드 수정
