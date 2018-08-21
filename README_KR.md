@@ -1,10 +1,10 @@
+# Here is an execution file	http://bit.ly/dcs_
+
 # Download & Install
 ```
-git clone https://github.com/t2sc0m/docker_cli_dashboard.git
-cd docker_cli_dashboard
+curl -sL bit.ly/dcs_ -o ./dcs
 sudo chmod 755 ./dcs
 sudo mv ./dcs /usr/bin/dcs
-cd ..;rm -rf docker_cli_dashboard
 ```
 
 # docker_cli_dashboard
@@ -112,3 +112,7 @@ test_dcss
 3. `sa` 기능에서 `attach`를 빼고 명령어를 `start` 로 변경
 4. 코드 전체를 bash 문법에 맞게 변경
 5. 커맨드 프롬프트 추가
+
+#### 2018/08/21- update
+1. `run` 사용시 volume mount 옵션 기능 추가
+2. bash 문법에 맞게 몇몇 커맨드 수정

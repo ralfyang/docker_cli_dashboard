@@ -1,3 +1,5 @@
+
+# Here is an execution file	http://bit.ly/dcs_
 * Download & Install
 ```
 curl -sL bit.ly/dcs_ -o ./dcs
@@ -113,3 +115,7 @@ test_dcss
 3. Function update: Remove `attach` from `sa` and rename `sa` to `start`
 4. Change code to match the bash syntax
 5. Add command prompt
+
+#### 2018/08/21- update
+1. Function update: Add volume mount option to `run`
+2. Change some code to match the bash syntax
