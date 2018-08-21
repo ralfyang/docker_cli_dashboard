@@ -143,6 +143,7 @@ ProcessorAIDArray=($(cat ${Tmp_psAfile} | awk '{print $3}' | tail -n +5))
 ## Function for command as below
 # 2018.08.08 change container start options 
 # -it /bin/sh -->  -id
+# 2018.08.21 add volume mount option
 run_container(){
 	echo " == Do you need to make port forwarding ? [host-port:container-port or null] "
 	read -r portcheck
@@ -152,7 +153,29 @@ run_container(){
 			port_parser=$(echo "${portcheck}"  | sed -e 's/ [0-9]*:[0-9]/ -p&/g')
 			port_expose="-p ${port_parser}"
 		fi
-	${Comm} run ${port_expose} -id --name $2 ${ImageIDArray[$1]}
+	while : ; do
+		echo " == Do you need to make volume mount ? [host-path:container-path or null] "
+		read -r volumemount
+			if [[ ${volumemount} = "" ]];then
+				volume_mount_option=""
+			else
+				chk_dir=$(echo ${volumemount} | awk -F: '{print $1}')
+				if [ -d ${chk_dir} ];then
+					echo ""
+					echo "Directory Check... Done"
+					echo ""
+					volume_mount_option="-v ${volumemount}"
+					break
+				else
+					echo ""
+					echo "${chk_dir} does not exist."
+					echo "Please check directory path!!"
+					echo ""
+				fi
+			fi
+	done
+
+	${Comm} run ${port_expose} ${volume_mount_option} -id --name $2 ${ImageIDArray[$1]}
 }
 
 # 2018-08.09 change sa to start & delete attach
@@ -369,14 +392,14 @@ Clean_volume(){
 				read -r ImageNum
 				echo " == Please insert a new name for Run :"
 				read -r DockerName
-					if [[ ${DockerName} != "" ]];then
-				                run_container  ${ImageNum} ${DockerName}
+					if [[ ${ImageNum} != "" ]];then
+				                run_container  ${ImageNum} ${DockerName} 
 					else
 						echo " == No Image ID == "
 					fi
 
 				;;
-			# 2018.08.08 change sa to start
+			# 2018.08.08 change name (sa --> start)
 			start)
 				echo " == Please insert docker name for start :"
 				read -r St_docker
