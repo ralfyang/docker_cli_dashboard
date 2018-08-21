@@ -1,6 +1,6 @@
-# Here is an execution file	http://bit.ly/dcs_
 
-# Download & Install
+# Here is an execution file	http://bit.ly/dcs_
+* Download & Install
 ```
 curl -sL bit.ly/dcs_ -o ./dcs
 sudo chmod 755 ./dcs
