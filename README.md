@@ -1,6 +1,6 @@
-## Here is an execution file	`http://bit.ly/dcs_`
 
-## Download & Install
+# Here is an execution file	http://bit.ly/dcs_
+* Download & Install
 ```
 curl -sL bit.ly/dcs_ -o ./dcs
 sudo chmod 755 ./dcs
@@ -98,7 +98,6 @@ test_dcss
 #### 2017/07/6- update
 1. update for no-use image clean via `reduce` option
 
-
 #### 2017/07/6- update
 1. update for `prune` command all clean(volume/network/process/image)
 
@@ -106,10 +105,17 @@ test_dcss
 1. Function update: `save` for All docker image dump to the local file
 2. Function update: `load` for the local docker image file to the Docker images list
 
-
 #### 2017/11/09- update
 1. Function update: `log` for docker process log show
 2. Function name change: halt -> aps(all process stop) 
 
+#### 2018/08/09- update
+1. Function update: `stat` for All or selected container status monitoring
+2. Function update: `run` just run container without going into container
+3. Function update: Remove `attach` from `sa` and rename `sa` to `start`
+4. Change code to match the bash syntax
+5. Add command prompt
 
-
+#### 2018/08/21- update
+1. Function update: Add volume mount option to `run`
+2. Change some code to match the bash syntax
