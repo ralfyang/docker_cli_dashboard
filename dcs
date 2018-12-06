@@ -1,5 +1,5 @@
 #!/bin/bash
-### docker container control box  V. 2.52
+### docker container control box  V. 2.53
 ### Made by ralf goody80762@gmail.com
 ### Rewritten by tescom tescom@atdt01410.com 2018.08.08
 
@@ -158,6 +158,7 @@ run_container(){
 		read -r volumemount
 			if [[ ${volumemount} = "" ]];then
 				volume_mount_option=""
+				break
 			else
 				chk_dir=$(echo ${volumemount} | awk -F: '{print $1}')
 				if [ -d ${chk_dir} ];then
