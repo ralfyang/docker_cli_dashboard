@@ -1,5 +1,5 @@
 #!/bin/bash
-### docker container control box  V. 2.53
+### docker container control box  V. 2.54
 ### Made by ralf goody80762@gmail.com
 ### Rewritten by tescom tescom@atdt01410.com 2018.08.08
 
@@ -17,6 +17,7 @@ exefile=$(command -v dcs)
 #Docker_repo=$(cat /data/z/etc/init.d/docker | grep "^connection" | awk -F '=' '{print $2}' | sed -e 's/"//g' )
 #Docker_repo="[Docker repository IP]:[port]"
 Docker_repo=""
+Shell_cmd="/bin/bash"
 
 HOST=$(hostname)
 DATE=$(date +%Y%m%d)
@@ -62,30 +63,30 @@ trap exit_abnormal SIGINT SIGTERM
 
 
 
-BAR="=========================================================================================================================================================" 
+BAR="========================================================================================================================================================="
 {
-echo ${BAR}  
-echo "   [:: Docker Images ::]"  
-echo ${BAR} 
+echo ${BAR}
+echo "   [:: Docker Images ::]"
+echo ${BAR}
 ${Comm} images |awk '{printf "%.2d | "$0"\n",NR-1}' | sed -e 's/^00/  /g'
 } >| ${Tmp_imgfile}
 
 {
-echo ""  
-echo "" 
-echo ${BAR} 
-echo "   [:: Active Processors ::]" 
-echo ${BAR}  
+echo ""
+echo ""
+echo ${BAR}
+echo "   [:: Active Processors ::]"
+echo ${BAR}
 ${Comm} ps |awk '{printf "%.2d | "$0"\n",NR-1}' |sed -e 's/^00/  /g'
 } >| ${Tmp_psAfile}
 
 {
-echo ""  
-echo "" 
-echo ${BAR} 
-echo "   [:: All Processors ::]"  
-echo ${BAR}  
-${Comm} ps -a |awk '{printf "%.2d | "$0"\n",NR-1}' |sed -e 's/^00/  /g' 
+echo ""
+echo ""
+echo ${BAR}
+echo "   [:: All Processors ::]"
+echo ${BAR}
+${Comm} ps -a |awk '{printf "%.2d | "$0"\n",NR-1}' |sed -e 's/^00/  /g'
 } >| ${Tmp_psfile}
 
 	if [[ $osv = "osx" ]];then
@@ -141,7 +142,7 @@ ProcessorIDArray=($(cat ${Tmp_psfile} | awk '{print $3}' | tail -n +5))
 ProcessorAIDArray=($(cat ${Tmp_psAfile} | awk '{print $3}' | tail -n +5))
 
 ## Function for command as below
-# 2018.08.08 change container start options 
+# 2018.08.08 change container start options
 # -it /bin/sh -->  -id
 # 2018.08.21 add volume mount option
 run_container(){
@@ -227,7 +228,14 @@ rm_container(){
 }
 
 it_container(){
-        ${Comm} exec -it ${ProcessorAIDArray[$1]} /bin/bash -c "echo \"alias ll='ls -lai'\" >> ~/.bashrc && /bin/bash"
+	env_chk=$(${Comm} exec -it ${ProcessorAIDArray[$1]} $Shell_cmd -c "echo \"OK\"" > /tmp/env_chk)
+		if [[ $(grep "OK" /tmp/env_chk) != "" ]];then
+			Shell_cmd="/bin/bash"
+		else
+			Shell_cmd="/bin/sh"
+		fi
+	rm -f /tmp/env_chk
+        ${Comm} exec -it ${ProcessorAIDArray[$1]} $Shell_cmd -c "echo \"alias ll='ls -lai'\" >> ~/.bashrc && $Shell_cmd"
 }
 
 pull_image(){
@@ -316,7 +324,7 @@ load_all_images(){
 			${Comm} load < ${tarball_images_dir}/${i}
 			count=$(( count+1 ))
 		done
-        
+
 	echo " === Done  === "
 	sleep 1
 }
@@ -394,7 +402,7 @@ Clean_volume(){
 				echo " == Please insert a new name for Run :"
 				read -r DockerName
 					if [[ ${ImageNum} != "" ]];then
-				                run_container  ${ImageNum} ${DockerName} 
+				                run_container  ${ImageNum} ${DockerName}
 					else
 						echo " == No Image ID == "
 					fi
@@ -619,7 +627,7 @@ Clean_volume(){
                                         else
                                                 	Container_stat all
                                         fi
-                                ;;				
+                                ;;
 
 		esac
 	else
