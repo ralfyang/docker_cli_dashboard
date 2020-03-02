@@ -23,9 +23,14 @@ HOST=$(hostname)
 DATE=$(date +%Y%m%d)
 
 ## find a command
-Docker_comm=$(command -v docker)
+if [[ $(command -v podman) == "" ]];then
+	Docker_comm=$(command -v docker)
+else
+	Docker_comm=$(command -v podman)
+
+fi
 ## OS Check
-Docker_version=$(docker -v | awk -F',' '{print $1}')
+Docker_version=$($Docker_comm -v | awk -F',' '{print $1}')
 ## Check the sudo
 	if [[ $(whoami) = "root" ]];then
 		SUDO=""
