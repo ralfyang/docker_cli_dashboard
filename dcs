@@ -216,7 +216,7 @@ build_image(){
 		echo "Do you need to install docker_build_auto.sh here ? [ y/n ]"
 		read -r Answ
 			if [[ ${Answ} = "y" ]] || [[ ${Answ} = "Y" ]];then
-				wget goody80.github.io/docker_build_auto/docker_build_auto.sh
+				wget ralfyang.github.io/docker_build_auto/docker_build_auto.sh
 				sudo chmod 755 docker_build_auto.sh
 			else
 				echo "${BAR}"
