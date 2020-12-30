@@ -490,11 +490,11 @@ Clean_volume(){
 				;;
 			prune)
 				if [[ ${answ} != "y" ]];then
-					echo " == No use image will be remove. Are sure that ? [ y/n ]:"
-					read -r ImageOldPurge
-						if [[ ${ImageOldPurge} = "y" ]];then
+#					echo " == No use image will be remove. Are sure that ? [ y/n ]:"
+#					read -r ImageOldPurge
+#						if [[ ${ImageOldPurge} = "y" ]];then
 					                Purge_Old_image
-						fi
+#						fi
 				else
 					Purge_Old_image
 				fi
