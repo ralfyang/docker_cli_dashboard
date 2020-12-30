@@ -2,7 +2,7 @@
 
 # Download & Install
 ```
-curl -sL bit.ly/dcs_ -o ./dcs
+curl -sL bit.ly/dcs_0 -o ./dcs
 sudo chmod 755 ./dcs
 sudo mv ./dcs /usr/bin/dcs
 ```
@@ -116,3 +116,6 @@ test_dcss
 #### 2018/08/21- update
 1. `run` 사용시 volume mount 옵션 기능 추가
 2. bash 문법에 맞게 몇몇 커맨드 수정
+
+#### 2020/03/02- update
+1. Podman 명령어를 우선 지원합니다.

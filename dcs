@@ -1,5 +1,6 @@
 #!/bin/bash
-### docker container control box  V. 2.54
+### docker container control box  V. 2.7
+### Code from https://github.com/ralfyang/docker_cli_dashboard. Powered by Github.
 ### Made by ralf goody80762@gmail.com
 ### Rewritten by tescom tescom@atdt01410.com 2018.08.08
 
@@ -23,9 +24,14 @@ HOST=$(hostname)
 DATE=$(date +%Y%m%d)
 
 ## find a command
-Docker_comm=$(command -v docker)
+if [[ $(command -v podman) == "" ]];then
+	Docker_comm=$(command -v docker)
+else
+	Docker_comm=$(command -v podman)
+
+fi
 ## OS Check
-Docker_version=$(docker -v | awk -F',' '{print $1}')
+Docker_version=$($Docker_comm -v | awk -F',' '{print $1}')
 ## Check the sudo
 	if [[ $(whoami) = "root" ]];then
 		SUDO=""
@@ -211,7 +217,7 @@ build_image(){
 		echo "Do you need to install docker_build_auto.sh here ? [ y/n ]"
 		read -r Answ
 			if [[ ${Answ} = "y" ]] || [[ ${Answ} = "Y" ]];then
-				wget goody80.github.io/docker_build_auto/docker_build_auto.sh
+				wget ralfyang.github.io/docker_build_auto/docker_build_auto.sh
 				sudo chmod 755 docker_build_auto.sh
 			else
 				echo "${BAR}"
@@ -484,11 +490,11 @@ Clean_volume(){
 				;;
 			prune)
 				if [[ ${answ} != "y" ]];then
-					echo " == No use image will be remove. Are sure that ? [ y/n ]:"
-					read -r ImageOldPurge
-						if [[ ${ImageOldPurge} = "y" ]];then
+#					echo " == No use image will be remove. Are sure that ? [ y/n ]:"
+#					read -r ImageOldPurge
+#						if [[ ${ImageOldPurge} = "y" ]];then
 					                Purge_Old_image
-						fi
+#						fi
 				else
 					Purge_Old_image
 				fi
@@ -605,9 +611,9 @@ Clean_volume(){
 
 			upgrade)
 				Current_ver=$(cat ${exefile}  |grep 'V. [0-9].[0-9]' | sed -e 's/^### [[:alnum:]* ]* V. //g')
-				Latest_ver=$(curl -sLH "Cache-Control: no-cache" bit.ly/dcs_ |grep 'V. [0-9].[0-9]' | sed -e 's/^### [[:alnum:]* ]* V. //g')
+				Latest_ver=$(curl -sLH "Cache-Control: no-cache" bit.ly/ralf_dcs |grep 'V. [0-9].[0-9]' | sed -e 's/^### [[:alnum:]* ]* V. //g')
 				if [[ ${Current_ver} < ${Latest_ver} ]];then
-					curl -sLH "Cache-Control: no-cache" bit.ly/dcs_ -o /tmp/curl
+					curl -sLH "Cache-Control: no-cache" bit.ly/ralf_dcs -o /tmp/curl
 					sudo cp  /tmp/curl ${exefile}
 					sudo rm -f /tmp/curl
 					chmod 755 ${exefile}
