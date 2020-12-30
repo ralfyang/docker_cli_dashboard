@@ -1,8 +1,8 @@
 
-# Here is an execution file	http://bit.ly/dcs_
+# Here is an execution file	http://bit.ly/ralf_dcs
 * Download & Install
 ```
-curl -sL bit.ly/dcs_0 -o ./dcs
+curl -sL bit.ly/ralf_dcs -o ./dcs
 sudo chmod 755 ./dcs
 sudo mv ./dcs /usr/bin/dcs
 ```
@@ -122,3 +122,7 @@ test_dcss
 
 #### 2020/03/02- update
 1. Podman command supports
+
+#### 2020/12/30- update
+1. Update for new bit.ly url for master branch's command directly
+2. Enable in-line command for `$ dcs prune` 
