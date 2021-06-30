@@ -1,5 +1,5 @@
 #!/bin/bash
-### docker container control box  V. 2.7
+### docker container control box  V. 2.8
 ### Code from https://github.com/ralfyang/docker_cli_dashboard. Powered by Github.
 ### Made by ralf goody80762@gmail.com
 ### Rewritten by tescom tescom@atdt01410.com 2018.08.08
@@ -110,7 +110,7 @@ ${Comm} ps -a |awk '{printf "%.2d | "$0"\n",NR-1}' |sed -e 's/^00/  /g'
 
 Print_screen(){
 ## Print screen
-clear
+clear -x
 cat ${Tmp_imgfile} ${Tmp_psAfile} ${Tmp_psfile}
 
 echo ""
@@ -336,7 +336,7 @@ load_all_images(){
 }
 
 Log_container(){
-	clear
+	clear -x
 	${Comm} logs ${ProcessorAIDArray[$1]}
 	echo ""
 	echo " - Please insert an any key if you all done -"
@@ -372,7 +372,7 @@ Purge_Old_image(){
 	${Comm} container prune --force 2>/dev/null
 	echo " --- container clean: Done ---"
 	echo ""
-	${Comm} image prune --force 2>/dev/null
+	${Comm} image prune -a --force 2>/dev/null
 	echo " --- Image clean: Done ---"
 	echo ""
 	${Comm} network prune --force 2>/dev/null
