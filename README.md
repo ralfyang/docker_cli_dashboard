@@ -4,7 +4,7 @@
 ```
 curl -sL bit.ly/ralf_dcs -o ./dcs
 sudo chmod 755 ./dcs
-sudo mv ./dcs /usr/bin/dcs
+sudo mv ./dcs /usr/local/bin/
 ```
 
 # docker_cli_dashboard
